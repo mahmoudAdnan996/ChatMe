@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="chatme.apps.madnan.chatme">
+
+    <uses-feature
+        android:name="android.hardware.Camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Welcom"
+            android:label="Welcome" />
+        <activity
+            android:name=".Login"
+            android:label="Sign in"
+            android:parentActivityName=".Welcom" />
+        <activity
+            android:name=".SignUp"
+            android:label="Sign up"
+            android:parentActivityName=".Welcom" />
+        <activity
+            android:name=".Profile"
+            android:label="Profile"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".UsersActivity"
+            android:label="All Users"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".UserProfile" />
+        <activity android:name=".RestorePassActivity"
+            android:label="Restore Password"
+            android:parentActivityName=".Login"></activity>
+    </application>
+
+</manifest>

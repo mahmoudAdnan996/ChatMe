@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:orientation="vertical"
+    tools:context="chatme.apps.madnan.chatme.SignUp">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:orientation="vertical"
+            tools:ignore="ScrollViewSize">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <com.alexzh.circleimageview.CircleImageView
+                    android:id="@+id/signUp_image"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/profile"
+                    app:view_borderColor="#FFFF"
+                    app:view_borderWidth="2dp"
+                    tools:ignore="ContentDescription" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/signUp_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColorHint="#FFFF">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:backgroundTint="#FFFF"
+                        android:drawableLeft="@drawable/ic_person"
+                        android:drawablePadding="8dp"
+                        android:drawableStart="@drawable/ic_person"
+                        android:hint="@string/Signup_username_hint"
+                        android:inputType="textPersonName"
+                        android:textColor="#FFFF"
+                        android:textColorHint="#FFFF"
+                        android:textColorLink="@android:color/background_light"
+                        android:textSize="16sp"
+                        tools:ignore="Deprecated,HardcodedText,RtlHardcoded,UnusedAttribute" />
+                    </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/signUp_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColorHint="#FFFF">
+                <EditText
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:backgroundTint="#FFFF"
+                    android:drawableLeft="@drawable/ic_email"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/ic_email"
+                    android:hint="@string/Signup_email_hint"
+                    android:inputType="textEmailAddress"
+                    android:textColor="#FFFF"
+                    android:textColorHint="#FFFF"
+                    android:textColorLink="@android:color/background_light"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText,RtlHardcoded,UnusedAttribute" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/signUp_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColorHint="#FFFF">
+                <EditText
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:backgroundTint="#FFFF"
+                    android:drawableLeft="@drawable/ic_lock"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/ic_lock"
+                    android:hint="@string/Signup_password_hint"
+                    android:inputType="textPassword"
+                    android:textColor="#FFFF"
+                    android:textColorHint="#FFFF"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText,RtlHardcoded,UnusedAttribute" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/signUp_retypePass"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColorHint="#FFFF"
+                    >
+                <EditText
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:backgroundTint="#FFFF"
+                    android:drawableLeft="@drawable/ic_lock"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/ic_lock"
+                    android:hint="@string/Signup_retype_hint"
+                    android:inputType="textPassword"
+                    android:textColor="#FFFF"
+                    android:textColorHint="#FFFF"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText,RtlHardcoded"
+                    tools:targetApi="lollipop" />
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="30dp"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/signUp_button"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/round_btn"
+                    android:text="@string/Signup_button_text"
+                    android:textColor="#E2001A"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

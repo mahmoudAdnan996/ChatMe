@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg"
+    android:paddingTop="30dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    tools:context="chatme.apps.madnan.chatme.RestorePassActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enter email to send your password"
+        android:textColor="#FFFF"
+        android:textSize="16sp"
+        android:layout_marginBottom="20dp"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/restorePass_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#FFFF"
+
+        >
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFFF"
+            android:drawableLeft="@drawable/ic_person"
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/ic_person"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:textColor="#FFFF"
+            android:textColorHint="#FFFF"
+            android:textColorLink="@android:color/background_light"
+            android:textSize="16sp"
+            tools:ignore="HardcodedText,RtlHardcoded,UnusedAttribute" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/restore_button"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/round_btn"
+        android:text="Restore"
+        android:textAllCaps="false"
+        android:textColor="#E2001A"
+        android:textSize="16sp"
+        android:onClick="restoreBtn"
+        />
+
+</LinearLayout>

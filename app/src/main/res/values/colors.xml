@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#e2001a</color>
+    <color name="colorPrimaryDark">#C12127</color>
+    <color name="colorAccent">#FFFF</color>
+    <color name="trans">#00FFFFFF</color>
+    <color name="profileBtn">#2b4db0</color>
+
+    <color name="black_overlay">#4b4b4b</color>
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <com.alexzh.circleimageview.CircleImageView
+        android:id="@+id/users_profileIMG"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/profile" />
+
+    <TextView
+        android:id="@+id/users_nameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_toEndOf="@+id/users_profileIMG"
+        android:text="Display name"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/users_statusTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/users_nameTV"
+        android:layout_below="@+id/users_nameTV"
+        android:layout_marginTop="10dp"
+        android:text="User default status" />
+
+</RelativeLayout>
