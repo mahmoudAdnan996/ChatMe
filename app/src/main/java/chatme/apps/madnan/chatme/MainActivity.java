@@ -1,6 +1,7 @@
 package chatme.apps.madnan.chatme;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -134,8 +137,26 @@ public class MainActivity extends AppCompatActivity {
         fab_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                sendToWelcome();
+                new MaterialDialog.Builder(MainActivity.this)
+                        .title("Are you sure?")
+                        .positiveText("Yes")
+                        .positiveColorRes(R.color.colorPrimary)
+                        .negativeText("No")
+                        .negativeColorRes(R.color.colorPrimary)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                FirebaseAuth.getInstance().signOut();
+                                sendToWelcome();
+                            }
+                        })
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                return;
+                            }
+                        })
+                        .show();
             }
         });
     }

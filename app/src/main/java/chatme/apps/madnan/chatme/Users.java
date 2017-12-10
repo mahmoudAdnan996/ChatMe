@@ -6,24 +6,26 @@ package chatme.apps.madnan.chatme;
 
 public class Users {
 
-    public String name;
+    public String username;
     public String status;
     public String image;
+    public String thumb_image;
 
     public Users(){}
 
-    public Users(String name, String status, String image) {
-        this.name = name;
+    public Users(String name, String status, String image, String thumb_image) {
+        this.username = name;
         this.status = status;
+        this.thumb_image = thumb_image;
         this.image = image;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getStatus() {
@@ -32,6 +34,14 @@ public class Users {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getThumb_image() {
+        return thumb_image;
+    }
+
+    public void setThumb_image(String thumb_image) {
+        this.thumb_image = thumb_image;
     }
 
     public String getImage() {

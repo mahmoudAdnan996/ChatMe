@@ -1,17 +1,16 @@
 package chatme.apps.madnan.chatme;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -30,33 +29,30 @@ public class Login extends AppCompatActivity {
     MaterialDialog dialog;
 
     private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mAuth = FirebaseAuth.getInstance();
 
         progressDialog = new MaterialDialog.Builder(this);
 
-
         userName = (TextInputLayout)findViewById(R.id.signIn_username);
         password = (TextInputLayout)findViewById(R.id.signIn_password);
+        signIn_btn = (Button)findViewById(R.id.signIn_button);
 
         Animation an = AnimationUtils.loadAnimation(getBaseContext(),R.anim.appear);
-        signIn_btn = (Button)findViewById(R.id.signIn_button);
         signIn_btn.startAnimation(an);
-
-
 
         signIn_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                mUsername = userName.getEditText().getText().toString();
-                mPassword = password.getEditText().getText().toString();
+                mUsername = userName.getEditText().getText().toString().trim();
+                mPassword = password.getEditText().getText().toString().trim();
 
                 if (mUsername.isEmpty() || mPassword.isEmpty()){
                     Toast.makeText(getBaseContext(), "Please fill all fields!", Toast.LENGTH_SHORT).show();
@@ -92,7 +88,8 @@ public class Login extends AppCompatActivity {
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
-                        }else {
+                        }
+                        else {
                             dialog.dismiss();
                             Log.e("ERROR", String.valueOf(task.getException()));
                             Toast.makeText(Login.this, "Can't sign in, something is wrong,please try again!", Toast.LENGTH_LONG).show();

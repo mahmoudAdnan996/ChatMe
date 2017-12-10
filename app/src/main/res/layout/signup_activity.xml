@@ -28,14 +28,12 @@
                 android:orientation="vertical"
                 android:padding="5dp">
 
-                <com.alexzh.circleimageview.CircleImageView
+                <ImageView
                     android:id="@+id/signUp_image"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/profile"
-                    app:view_borderColor="#FFFF"
-                    app:view_borderWidth="2dp"
+                    android:src="@drawable/chat_me"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
 

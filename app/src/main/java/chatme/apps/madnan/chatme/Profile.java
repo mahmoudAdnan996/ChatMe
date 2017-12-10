@@ -1,20 +1,22 @@
 package chatme.apps.madnan.chatme;
 
-import android.content.DialogInterface;
+import android.*;
+import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,21 +32,36 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 public class Profile extends AppCompatActivity {
-
-    private DatabaseReference mUserDatabase;
-    private FirebaseUser mCurrentUser;
-
 
     public static final int IMAGE_GALLARY_REQUEST = 2;
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 30;
 
-    ImageView userProfileIV;
+    private DatabaseReference mUserDatabase;
+    private FirebaseUser mCurrentUser;
+    private StorageReference mStorageRef;
+
+    CircleImageView userProfileIV;
     TextView usernameTV, statusTV, phoneTV, emailTV, addressTV;
+    ProgressDialog mProgressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +70,7 @@ public class Profile extends AppCompatActivity {
         getSupportActionBar().hide();
 
 
-        userProfileIV = (ImageView)findViewById(R.id.profile_userIV);
+        userProfileIV = (CircleImageView)findViewById(R.id.profile_userIV);
         usernameTV = (TextView)findViewById(R.id.profile_usernameTV);
         statusTV = (TextView)findViewById(R.id.profile_statusTV);
         phoneTV = (TextView)findViewById(R.id.profile_phoneTV);
@@ -63,6 +80,8 @@ public class Profile extends AppCompatActivity {
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String currentUserId = mCurrentUser.getUid();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
+        mUserDatabase.keepSynced(true);
+        mStorageRef = FirebaseStorage.getInstance().getReference();
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -72,7 +91,7 @@ public class Profile extends AppCompatActivity {
                 String mobile = dataSnapshot.child("mobile").getValue().toString();
                 String email = dataSnapshot.child("email").getValue().toString();
                 String address = dataSnapshot.child("address").getValue().toString();
-                String image = dataSnapshot.child("image").getValue().toString();
+                final String image = dataSnapshot.child("image").getValue().toString();
                 String thumbImage = dataSnapshot.child("thumb_image").getValue().toString();
 
                 usernameTV.setText(username);
@@ -80,6 +99,23 @@ public class Profile extends AppCompatActivity {
                 emailTV.setText(email);
                 phoneTV.setText(mobile);
                 addressTV.setText(address);
+                if (!image.equals("default")){
+//                    Picasso.with(Profile.this).load(image).placeholder(R.drawable.profile).into(userProfileIV);
+                    Picasso.with(Profile.this).load(image).networkPolicy(NetworkPolicy.OFFLINE)
+                            .placeholder(R.drawable.profile).into(userProfileIV, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+
+                            Picasso.with(Profile.this).load(image).placeholder(R.drawable.profile).into(userProfileIV);
+                        }
+                    });
+                }
+
             }
 
             @Override
@@ -115,9 +151,14 @@ public class Profile extends AppCompatActivity {
     }
     // capture an image
     private void takeImageIntent(){
-        Intent takeImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takeImage.resolveActivity(getPackageManager()) != null){
-            startActivityForResult(takeImage, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},1);
+        }else {
+            Intent takeImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takeImage.resolveActivity(getPackageManager()) != null){
+                startActivityForResult(takeImage, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+        }
+
         }
     }
 
@@ -127,13 +168,57 @@ public class Profile extends AppCompatActivity {
         imageGallaryIntent.setType("image/*");
         startActivityForResult(Intent.createChooser(imageGallaryIntent,"SELECT IMAGE"),IMAGE_GALLARY_REQUEST);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            takeImageIntent();
+        }else {
+            Toast.makeText(this, "App need Camera Permission", Toast.LENGTH_LONG).show();
+        }
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String currentUserId = mCurrentUser.getUid();
         // if the result is capturing Image
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap)extras.get("data");
-                userProfileIV.setImageBitmap(imageBitmap);
+                Uri uri = getImageUri(getApplicationContext(), imageBitmap);
+//                userProfileIV.setImageBitmap(imageBitmap);
+
+                mProgressDialog = new ProgressDialog(Profile.this, R.style.AlertDialogTheme);
+                mProgressDialog.setTitle("Uploading image");
+                mProgressDialog.setMessage("please wait");
+                mProgressDialog.setProgressStyle(R.style.AlertDialogTheme);
+                mProgressDialog.setCanceledOnTouchOutside(false);
+                mProgressDialog.show();
+                userProfileIV.setImageURI(uri);
+
+                StorageReference filePath = mStorageRef.child("profile_images").child(currentUserId + ".jpg");
+                filePath.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()){
+
+                            String downloadUrl = task.getResult().getDownloadUrl().toString();
+                            mUserDatabase.child("image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        mProgressDialog.dismiss();
+                                        Toast.makeText(Profile.this, "Uploading Success", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }else {
+                            Log.e("ERROR IS :" , String.valueOf(task.getException()));
+                            Toast.makeText(Profile.this, "Error while uploading image", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
             }
             else if (resultCode == RESULT_CANCELED) {
@@ -147,21 +232,114 @@ public class Profile extends AppCompatActivity {
                         .show();
             }
         }
-        if(requestCode == IMAGE_GALLARY_REQUEST){
-            if(resultCode == RESULT_OK){
+        if(requestCode == IMAGE_GALLARY_REQUEST) {
+            if (resultCode == RESULT_OK) {
                 Uri uri = data.getData();
-                InputStream inputStream;
-                try{
-                    inputStream = getContentResolver().openInputStream(uri);
-                    Bitmap imageFromGallary = BitmapFactory.decodeStream(inputStream);
-                    userProfileIV.setImageBitmap(imageFromGallary);
-
-                }catch(IOException e){
-                    e.printStackTrace();
-                    Toast.makeText(this, "Unable to open image", Toast.LENGTH_SHORT).show();
-                }
+                CropImage.activity(uri)
+                        .setAspectRatio(1, 1)
+                        .start(this);
             }
         }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                if (resultCode == RESULT_OK) {
+                    mProgressDialog = new ProgressDialog(Profile.this, R.style.AlertDialogTheme);
+                    mProgressDialog.setTitle("Uploading image");
+                    mProgressDialog.setMessage("please wait");
+                    mProgressDialog.setProgressStyle(R.style.AlertDialogTheme);
+                    mProgressDialog.setCanceledOnTouchOutside(false);
+                    mProgressDialog.show();
+
+                    Uri resultUri = result.getUri();
+
+                    File thumb_filePath = new File(resultUri.getPath());
+                    Bitmap thumb_bitmap = null;
+                    try {
+                        thumb_bitmap = new Compressor(this)
+                                    .setMaxHeight(200)
+                                    .setMaxWidth(200)
+                                    .setQuality(75)
+                                    .compressToBitmap(thumb_filePath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    thumb_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    final byte[] thumb_byte = baos.toByteArray();
+
+
+                    userProfileIV.setImageURI(resultUri);
+
+                    StorageReference filePath = mStorageRef.child("profile_images").child(currentUserId + ".jpg");
+                    final StorageReference thumb_filepath = mStorageRef.child("profile_images").child("thumbs").child(currentUserId + ".jpg");
+                filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()){
+                            final String downloadUrl = task.getResult().getDownloadUrl().toString();
+
+                            UploadTask uploadTask = thumb_filepath.putBytes(thumb_byte);
+                            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                    String thumb_downloadUrl = task.getResult().getDownloadUrl().toString();
+
+                                    if (task.isSuccessful()){
+                                        Map updatedInfo = new HashMap();
+                                        updatedInfo.put("image", downloadUrl);
+                                        updatedInfo.put("thumb_image", thumb_downloadUrl);
+
+                                        mUserDatabase.updateChildren(updatedInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()){
+                                                    mProgressDialog.dismiss();
+                                                    Toast.makeText(Profile.this, "Uploading Success", Toast.LENGTH_SHORT).show();
+
+                                                }
+                                            }
+                                        });
+                                    }else {
+                                        Log.e("ERROR IS :" , String.valueOf(task.getException()));
+                                        mProgressDialog.dismiss();
+                                        Toast.makeText(Profile.this, "Error while uploading image", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                    Exception error = result.getError();
+                }
+            }
+
+
+//                userProfileIV.setImageURI(uri);
+//                StorageReference filePath = mStorageRef.child("profile_images").child(random() + ".jpg");
+//                filePath.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+//                        if (task.isSuccessful()){
+//                            Toast.makeText(Profile.this, "Working..", Toast.LENGTH_SHORT).show();
+//                        }else {
+//                            Log.e("ERROR IS :" , String.valueOf(task.getException()));
+//                            Toast.makeText(Profile.this, "Error while uploading image", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
+//                InputStream inputStream;
+//                try{
+//                    inputStream = getContentResolver().openInputStream(uri);
+//                    Bitmap imageFromGallary = BitmapFactory.decodeStream(inputStream);
+//                    userProfileIV.setImageBitmap(imageFromGallary);
+//
+//                }catch(IOException e){
+//                    e.printStackTrace();
+//                    Toast.makeText(this, "Unable to open image", Toast.LENGTH_SHORT).show();
+//                }
+
     }
     public void EditStatus(View view) {
 
@@ -250,9 +428,9 @@ public class Profile extends AppCompatActivity {
                 .input("Email", null, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        String editedEmail = input.toString();
+                        String editedEmail = input.toString().trim();
                         emailTV.setText(editedEmail);
-                        mUserDatabase.child("email").setValue(editedEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        mCurrentUser.updateEmail(editedEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()){
@@ -263,6 +441,7 @@ public class Profile extends AppCompatActivity {
                                 }
                             }
                         });
+                        mUserDatabase.child("email").setValue(editedEmail);
                     }
                 })
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -313,5 +492,23 @@ public class Profile extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+    // convert bitmap to uri
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+    public static String random() {
+        Random generator = new Random();
+        StringBuilder randomStringBuilder = new StringBuilder();
+        int randomLength = generator.nextInt(10);
+        char tempChar;
+        for (int i = 0; i < randomLength; i++){
+            tempChar = (char) (generator.nextInt(96) + 32);
+            randomStringBuilder.append(tempChar);
+        }
+        return randomStringBuilder.toString();
     }
 }

@@ -22,29 +22,22 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.google.firebase:firebase-database:11.0.4'
+    implementation 'com.google.firebase:firebase-storage:11.0.4'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.alexzh:circleimageview:1.1.2@aar'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.5.+'
+    implementation 'id.zelory:compressor:2.1.0'
     implementation 'com.google.firebase:firebase-auth:11.0.4'
     implementation 'com.afollestad.material-dialogs:core:0.9.5.0'
+    implementation 'com.firebaseui:firebase-ui-database:2.2.0'
+    implementation 'com.squareup.okhttp:okhttp:2.5.0'
     testImplementation 'junit:junit:4.12'
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 apply plugin: 'com.google.gms.google-services'
