@@ -1,4 +1,4 @@
-package chatme.apps.madnan.chatme;
+package chatme.apps.madnan.chatme.ui;
 
 import android.app.ProgressDialog;
 import android.support.annotation.NonNull;
@@ -27,6 +27,9 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
+
+import chatme.apps.madnan.chatme.R;
 
 public class UserProfile extends AppCompatActivity {
 
@@ -35,10 +38,9 @@ public class UserProfile extends AppCompatActivity {
     Button sendRequest, declinRequest;
 
     DatabaseReference mDatabaseReference;
-
     DatabaseReference mFriendReqDatabase;
-
     DatabaseReference mFriendDatabase;
+    DatabaseReference mNotificationDatabase;
 
     ProgressDialog progressDialog;
 
@@ -59,6 +61,7 @@ public class UserProfile extends AppCompatActivity {
 
         mFriendReqDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_req");
         mFriendDatabase = FirebaseDatabase.getInstance().getReference().child("Friends");
+        mNotificationDatabase = FirebaseDatabase.getInstance().getReference().child("notifications");
 
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -177,15 +180,24 @@ public class UserProfile extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
                                 mFriendReqDatabase.child(userId).child(mCurrentUser.getUid()).child("request_type")
-                                        .setValue("received").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        .setValue("received").addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
+                                    public void onSuccess(Void aVoid) {
 
-                                        currentState = "req_sent";
-                                        sendRequest.setText("Cancel Friend Request");
+                                        HashMap<String, String> notificationData = new HashMap<>();
+                                        notificationData.put("from", mCurrentUser.getUid());
+                                        notificationData.put("type", "request");
+                                        mNotificationDatabase.child(userId).push().setValue(notificationData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+89
+                                                currentState = "req_sent";
+                                                sendRequest.setText("Cancel Friend Request");
 
-                                        declinRequest.setVisibility(View.INVISIBLE);
-                                        declinRequest.setEnabled(false);
+                                                declinRequest.setVisibility(View.INVISIBLE);
+                                                declinRequest.setEnabled(false);
+                                            }
+                                        });
                                     }
                                 });
                             }else {

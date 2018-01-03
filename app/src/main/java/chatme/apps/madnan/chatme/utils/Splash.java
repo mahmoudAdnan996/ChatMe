@@ -1,4 +1,4 @@
-package chatme.apps.madnan.chatme;
+package chatme.apps.madnan.chatme.utils;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +7,7 @@ import android.view.WindowManager;
 import android.view.animation.AnimationSet;
 
 import chatme.apps.madnan.chatme.R;
-import chatme.apps.madnan.chatme.MainActivity;
+import chatme.apps.madnan.chatme.ui.MainActivity;
 
 public class Splash extends AppCompatActivity {
 

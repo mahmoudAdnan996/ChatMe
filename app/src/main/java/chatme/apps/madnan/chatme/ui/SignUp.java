@@ -1,4 +1,4 @@
-package chatme.apps.madnan.chatme;
+package chatme.apps.madnan.chatme.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,14 +15,18 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
+
+import chatme.apps.madnan.chatme.R;
 
 public class SignUp extends AppCompatActivity {
 
@@ -99,7 +103,9 @@ public class SignUp extends AppCompatActivity {
                         if (task.isSuccessful()){
 
                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                            String userId = currentUser.getUid();
+                            final String userId = currentUser.getUid();
+
+                            final String deviceToken = FirebaseInstanceId.getInstance().getToken();
 
                             // add cild
                             mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
@@ -116,10 +122,16 @@ public class SignUp extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){
                                         dialog.dismiss();
-                                        Intent intent = new Intent(SignUp.this, MainActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(intent);
-                                        finish();
+
+                                        mDatabase.child(userId).child("device_token").setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Intent intent = new Intent(SignUp.this, MainActivity.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        });
                                     }
                                 }
                             });

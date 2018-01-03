@@ -1,4 +1,4 @@
-package chatme.apps.madnan.chatme;
+package chatme.apps.madnan.chatme.ui.fragments;
 
 
 import android.os.Bundle;
@@ -13,10 +13,10 @@ import chatme.apps.madnan.chatme.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendsFragment extends Fragment {
+public class RequestsFragment extends Fragment {
 
 
-    public FriendsFragment() {
+    public RequestsFragment() {
         // Required empty public constructor
     }
 
@@ -25,7 +25,7 @@ public class FriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_friends, container, false);
+        return inflater.inflate(R.layout.fragment_requests, container, false);
     }
 
 }

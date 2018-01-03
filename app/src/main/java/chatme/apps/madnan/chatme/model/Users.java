@@ -1,4 +1,4 @@
-package chatme.apps.madnan.chatme;
+package chatme.apps.madnan.chatme.model;
 
 /**
  * Created by mahmoud adnan on 10/29/2017.

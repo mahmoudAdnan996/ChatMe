@@ -1,4 +1,4 @@
-package chatme.apps.madnan.chatme;
+package chatme.apps.madnan.chatme.ui;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +8,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import chatme.apps.madnan.chatme.R;
-import chatme.apps.madnan.chatme.Login;
-import chatme.apps.madnan.chatme.SignUp;
+import chatme.apps.madnan.chatme.ui.Login;
+import chatme.apps.madnan.chatme.ui.SignUp;
 
 public class Welcom extends AppCompatActivity {
 

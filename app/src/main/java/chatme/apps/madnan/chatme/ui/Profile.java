@@ -1,6 +1,5 @@
-package chatme.apps.madnan.chatme;
+package chatme.apps.madnan.chatme.ui;
 
-import android.*;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,7 +16,6 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import chatme.apps.madnan.chatme.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 
@@ -65,7 +64,7 @@ public class Profile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.profile_activity);
+        setContentView(chatme.apps.madnan.chatme.R.layout.profile_activity);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
 
@@ -187,6 +186,9 @@ public class Profile extends AppCompatActivity {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap)extras.get("data");
                 Uri uri = getImageUri(getApplicationContext(), imageBitmap);
+                CropImage.activity(uri)
+                        .setAspectRatio(1, 1)
+                        .start(this);
 //                userProfileIV.setImageBitmap(imageBitmap);
 
                 mProgressDialog = new ProgressDialog(Profile.this, R.style.AlertDialogTheme);
@@ -316,29 +318,6 @@ public class Profile extends AppCompatActivity {
             }
 
 
-//                userProfileIV.setImageURI(uri);
-//                StorageReference filePath = mStorageRef.child("profile_images").child(random() + ".jpg");
-//                filePath.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-//                        if (task.isSuccessful()){
-//                            Toast.makeText(Profile.this, "Working..", Toast.LENGTH_SHORT).show();
-//                        }else {
-//                            Log.e("ERROR IS :" , String.valueOf(task.getException()));
-//                            Toast.makeText(Profile.this, "Error while uploading image", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-//                InputStream inputStream;
-//                try{
-//                    inputStream = getContentResolver().openInputStream(uri);
-//                    Bitmap imageFromGallary = BitmapFactory.decodeStream(inputStream);
-//                    userProfileIV.setImageBitmap(imageFromGallary);
-//
-//                }catch(IOException e){
-//                    e.printStackTrace();
-//                    Toast.makeText(this, "Unable to open image", Toast.LENGTH_SHORT).show();
-//                }
 
     }
     public void EditStatus(View view) {

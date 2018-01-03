@@ -9,7 +9,7 @@
     android:paddingTop="30dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    tools:context="chatme.apps.madnan.chatme.RestorePassActivity">
+    tools:context="chatme.apps.madnan.chatme.ui.RestorePassActivity">
 
     <TextView
         android:layout_width="match_parent"

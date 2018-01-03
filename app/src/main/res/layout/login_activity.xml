@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/bg"
-    tools:context="chatme.apps.madnan.chatme.Login">
+    tools:context="chatme.apps.madnan.chatme.ui.Login">
 
 
     <ScrollView

@@ -1,4 +1,4 @@
-package chatme.apps.madnan.chatme;
+package chatme.apps.madnan.chatme.ui.fragments;
 
 
 import android.os.Bundle;

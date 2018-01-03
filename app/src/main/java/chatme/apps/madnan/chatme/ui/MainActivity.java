@@ -1,4 +1,4 @@
-package chatme.apps.madnan.chatme;
+package chatme.apps.madnan.chatme.ui;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
@@ -21,6 +20,9 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import chatme.apps.madnan.chatme.R;
+import chatme.apps.madnan.chatme.ui.adapter.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 

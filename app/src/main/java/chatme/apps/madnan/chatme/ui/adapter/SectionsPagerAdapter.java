@@ -1,8 +1,12 @@
-package chatme.apps.madnan.chatme;
+package chatme.apps.madnan.chatme.ui.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import chatme.apps.madnan.chatme.ui.fragments.ChatsFragment;
+import chatme.apps.madnan.chatme.ui.fragments.FriendsFragment;
+import chatme.apps.madnan.chatme.ui.fragments.RequestsFragment;
 
 /**
  * Created by mahmoud adnan on 10/29/2017.

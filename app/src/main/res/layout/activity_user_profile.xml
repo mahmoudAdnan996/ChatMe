@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black_overlay"
-    tools:context="chatme.apps.madnan.chatme.UserProfile">
+    tools:context="chatme.apps.madnan.chatme.ui.UserProfile">
 
     <ImageView
         android:id="@+id/userProfileIMG"
