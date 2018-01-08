@@ -78,9 +78,8 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
-
-
     }
+
     private void loginUser(String username, String password){
 
         mAuth.signInWithEmailAndPassword(username, password)
@@ -106,8 +105,6 @@ public class Login extends AppCompatActivity {
                                     finish();
                                 }
                             });
-
-
                         }
                         else {
                             dialog.dismiss();

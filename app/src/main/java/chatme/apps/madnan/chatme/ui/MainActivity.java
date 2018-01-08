@@ -20,6 +20,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import chatme.apps.madnan.chatme.R;
 import chatme.apps.madnan.chatme.ui.adapter.SectionsPagerAdapter;
@@ -27,6 +29,7 @@ import chatme.apps.madnan.chatme.ui.adapter.SectionsPagerAdapter;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    DatabaseReference mUserRef;
 
     FloatingActionButton fab_logout, fab_profile, fab_plus;
     Animation fabOpen, fabClose, fabClockwise, fabAntiClockwise;
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+        mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,7 +69,15 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null){
 
             sendToWelcome();
+        }else {
+            mUserRef.child("online").setValue(true);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mUserRef.child("online").setValue(false);
     }
 
     private void sendToWelcome() {

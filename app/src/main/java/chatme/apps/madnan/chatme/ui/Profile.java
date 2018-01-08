@@ -99,7 +99,6 @@ public class Profile extends AppCompatActivity {
                 phoneTV.setText(mobile);
                 addressTV.setText(address);
                 if (!image.equals("default")){
-//                    Picasso.with(Profile.this).load(image).placeholder(R.drawable.profile).into(userProfileIV);
                     Picasso.with(Profile.this).load(image).networkPolicy(NetworkPolicy.OFFLINE)
                             .placeholder(R.drawable.profile).into(userProfileIV, new Callback() {
                         @Override
@@ -114,7 +113,6 @@ public class Profile extends AppCompatActivity {
                         }
                     });
                 }
-
             }
 
             @Override
@@ -122,7 +120,6 @@ public class Profile extends AppCompatActivity {
 
             }
         });
-
     }
 
     public void choosePhoto(View view) {
@@ -146,7 +143,6 @@ public class Profile extends AppCompatActivity {
                     }
                 })
                 .show();
-
     }
     // capture an image
     private void takeImageIntent(){
@@ -189,7 +185,6 @@ public class Profile extends AppCompatActivity {
                 CropImage.activity(uri)
                         .setAspectRatio(1, 1)
                         .start(this);
-//                userProfileIV.setImageBitmap(imageBitmap);
 
                 mProgressDialog = new ProgressDialog(Profile.this, R.style.AlertDialogTheme);
                 mProgressDialog.setTitle("Uploading image");
@@ -316,9 +311,6 @@ public class Profile extends AppCompatActivity {
                     Exception error = result.getError();
                 }
             }
-
-
-
     }
     public void EditStatus(View view) {
 
@@ -430,10 +422,6 @@ public class Profile extends AppCompatActivity {
                     }
                 })
                 .show();
-
-        /*
-        mCurrentUser.updateEmail(editedEmail);
-         */
     }
 
     public void EditAddress(View view) {
@@ -479,15 +467,16 @@ public class Profile extends AppCompatActivity {
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
-    public static String random() {
-        Random generator = new Random();
-        StringBuilder randomStringBuilder = new StringBuilder();
-        int randomLength = generator.nextInt(10);
-        char tempChar;
-        for (int i = 0; i < randomLength; i++){
-            tempChar = (char) (generator.nextInt(96) + 32);
-            randomStringBuilder.append(tempChar);
-        }
-        return randomStringBuilder.toString();
-    }
+
+//    public static String random() {
+//        Random generator = new Random();
+//        StringBuilder randomStringBuilder = new StringBuilder();
+//        int randomLength = generator.nextInt(10);
+//        char tempChar;
+//        for (int i = 0; i < randomLength; i++){
+//            tempChar = (char) (generator.nextInt(96) + 32);
+//            randomStringBuilder.append(tempChar);
+//        }
+//        return randomStringBuilder.toString();
+//    }
 }

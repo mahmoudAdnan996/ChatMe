@@ -84,7 +84,7 @@ public class UsersActivity extends AppCompatActivity {
         }
         public void setThumbImage(final String thumb_image, final Context context){
             final CircleImageView userImage = (CircleImageView)mView.findViewById(R.id.users_profileIMG);
-//            Picasso.with(context).load(thumb_image).placeholder(R.drawable.profile).into(userImage);
+
             Picasso.with(context).load(thumb_image).networkPolicy(NetworkPolicy.OFFLINE)
                     .placeholder(R.drawable.profile).into(userImage, new Callback() {
                 @Override
