@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 import chatme.apps.madnan.chatme.R;
 import chatme.apps.madnan.chatme.ui.adapter.SectionsPagerAdapter;
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             sendToWelcome();
         }
         else {
-            mUserRef.child("online").setValue(true);
+            mUserRef.child("online").setValue("true");
         }
     }
 
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
 
         if (currentUser != null){
-            mUserRef.child("online").setValue(false);
+            mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
         }
     }
 

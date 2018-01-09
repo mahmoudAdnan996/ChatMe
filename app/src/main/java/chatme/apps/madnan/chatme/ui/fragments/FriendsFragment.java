@@ -29,6 +29,7 @@ import com.squareup.picasso.Picasso;
 
 import chatme.apps.madnan.chatme.R;
 import chatme.apps.madnan.chatme.model.Friends;
+import chatme.apps.madnan.chatme.ui.ChatActivity;
 import chatme.apps.madnan.chatme.ui.UserProfile;
 import chatme.apps.madnan.chatme.ui.UsersActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -89,11 +90,11 @@ public class FriendsFragment extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        String username = dataSnapshot.child("username").getValue().toString();
-                        String imageUri = dataSnapshot.child("thumb_image").getValue().toString();
+                        final String username = dataSnapshot.child("username").getValue().toString();
+                        final String imageUri = dataSnapshot.child("thumb_image").getValue().toString();
 
                         if (dataSnapshot.hasChild("online")){
-                            Boolean userOnline =(boolean) dataSnapshot.child("online").getValue();
+                            String userOnline = dataSnapshot.child("online").getValue().toString();
                             viewHolder.setUserOnline(userOnline);
 
                         }
@@ -118,7 +119,11 @@ public class FriendsFragment extends Fragment {
                                             startActivity(intent);
 
                                         }else if (items[which].equals("Start Chat")){
-
+                                            Intent intent = new Intent(getActivity(), ChatActivity.class);
+                                            intent.putExtra("userId", userId);
+                                            intent.putExtra("username", username);
+                                            intent.putExtra("image", imageUri);
+                                            startActivity(intent);
                                         }
                                     }
                                 });
@@ -173,10 +178,10 @@ public class FriendsFragment extends Fragment {
             });
         }
 
-        public void setUserOnline(boolean online_status){
+        public void setUserOnline(String online_status){
             ImageView onlineImage = (ImageView)mView.findViewById(R.id.onlineIV);
 
-            if (online_status == true){
+            if (online_status.equals("true")){
                 onlineImage.setVisibility(View.VISIBLE);
             }else {
                 onlineImage.setVisibility(View.INVISIBLE);

@@ -9,6 +9,16 @@
     tools:context="chatme.apps.madnan.chatme.ui.SignUp">
 
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ToolbarStyle"
+        app:titleMarginStart="24dp"
+        app:titleTextColor="@android:color/white">
+    </android.support.v7.widget.Toolbar>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

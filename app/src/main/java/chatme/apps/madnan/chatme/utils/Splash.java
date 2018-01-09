@@ -19,7 +19,7 @@ public class Splash extends AppCompatActivity {
 
         AnimationSet animationSet = new AnimationSet(getBaseContext(), null);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
+
 
         Thread thread = new Thread(){
             @Override

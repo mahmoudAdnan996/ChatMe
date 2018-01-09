@@ -20,7 +20,7 @@ public class Welcom extends AppCompatActivity {
         setContentView(R.layout.welcom_activity);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
+
 
         signIn = (TextView)findViewById(R.id.Welcome_signin);
         signUp = (TextView)findViewById(R.id.Welcome_signup);
