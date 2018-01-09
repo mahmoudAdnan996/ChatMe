@@ -265,7 +265,6 @@ public class Profile extends AppCompatActivity {
                     thumb_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                     final byte[] thumb_byte = baos.toByteArray();
 
-
                     userProfileIV.setImageURI(resultUri);
 
                     StorageReference filePath = mStorageRef.child("profile_images").child(currentUserId + ".jpg");

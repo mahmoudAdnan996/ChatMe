@@ -17,8 +17,8 @@ import com.squareup.picasso.Picasso;
 
 public class ChatMe extends Application {
 
-    private DatabaseReference mUserDatabase;
-    private FirebaseAuth mAuth;
+//    private DatabaseReference mUserDatabase;
+//    private FirebaseAuth mAuth;
 
     @Override
     public void onCreate() {
@@ -34,21 +34,24 @@ public class ChatMe extends Application {
         built.setLoggingEnabled(true);
         Picasso.setSingletonInstance(built);
 
-        mAuth = FirebaseAuth.getInstance();
-        mUserDatabase = FirebaseDatabase.getInstance()
-                .getReference().child("Users").child(mAuth.getCurrentUser().getUid());
-        mUserDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null){
-                    mUserDatabase.child("online").onDisconnect().setValue(false);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+//        mAuth = FirebaseAuth.getInstance();
+//        mUserDatabase = FirebaseDatabase.getInstance().getReference()
+//                .child("Users").child(mAuth.getCurrentUser().getUid());
+//
+//        mUserDatabase.addValueEventListener(new ValueEventListener() {
+//
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                if (dataSnapshot != null){
+//                    mUserDatabase.child("online").onDisconnect().setValue(false);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 }

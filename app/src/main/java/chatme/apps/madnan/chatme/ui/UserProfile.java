@@ -98,6 +98,18 @@ public class UserProfile extends AppCompatActivity {
                 String name = dataSnapshot.child("username").getValue().toString();
                 String userStatus = dataSnapshot.child("status").getValue().toString();
                 final String image = dataSnapshot.child("image").getValue().toString();
+                mFriendDatabase.child(userId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String count = String.valueOf(dataSnapshot.getChildrenCount());
+                        friendsCount.setText(count + " " + "Friends");
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
                 username.setText(name);
                 status.setText(userStatus);

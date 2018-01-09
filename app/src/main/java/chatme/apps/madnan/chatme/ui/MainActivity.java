@@ -29,7 +29,8 @@ import chatme.apps.madnan.chatme.ui.adapter.SectionsPagerAdapter;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    DatabaseReference mUserRef;
+    private DatabaseReference mUserRef;
+    FirebaseUser currentUser;
 
     FloatingActionButton fab_logout, fab_profile, fab_plus;
     Animation fabOpen, fabClose, fabClockwise, fabAntiClockwise;
@@ -45,7 +46,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser != null){
+            mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -69,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null){
 
             sendToWelcome();
-        }else {
+        }
+        else {
             mUserRef.child("online").setValue(true);
         }
     }
@@ -77,7 +82,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        mUserRef.child("online").setValue(false);
+
+        if (currentUser != null){
+            mUserRef.child("online").setValue(false);
+        }
     }
 
     private void sendToWelcome() {
@@ -101,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, UsersActivity.class);
             startActivity(intent);
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -161,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 FirebaseAuth.getInstance().signOut();
+                                mUserRef.child("online").setValue(false);
                                 sendToWelcome();
                             }
                         })

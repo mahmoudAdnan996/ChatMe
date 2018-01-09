@@ -1,7 +1,11 @@
 package chatme.apps.madnan.chatme.ui.fragments;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +29,8 @@ import com.squareup.picasso.Picasso;
 
 import chatme.apps.madnan.chatme.R;
 import chatme.apps.madnan.chatme.model.Friends;
+import chatme.apps.madnan.chatme.ui.UserProfile;
+import chatme.apps.madnan.chatme.ui.UsersActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -78,7 +84,7 @@ public class FriendsFragment extends Fragment {
             protected void populateViewHolder(final FriendsViewHolder viewHolder, Friends model, int position) {
                 viewHolder.setDate(model.getDate());
 
-                String userId = getRef(position).getKey();
+                final String userId = getRef(position).getKey();
                 mUserDatabase.child(userId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -94,6 +100,32 @@ public class FriendsFragment extends Fragment {
 
                         viewHolder.setName(username);
                         viewHolder.setThumbImage(imageUri, getContext());
+
+                        viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                            final CharSequence[] items = {
+                                    "Open Profile","Start Chat"};
+
+                            @Override
+                            public void onClick(View v) {
+                                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                                dialog.setTitle("Select action");
+                                dialog.setItems(items, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (items[which].equals("Open Profile")){
+                                            Intent intent = new Intent(getActivity(), UserProfile.class);
+                                            intent.putExtra("userId", userId);
+                                            startActivity(intent);
+
+                                        }else if (items[which].equals("Start Chat")){
+
+                                        }
+                                    }
+                                });
+                                AlertDialog alert = dialog.create();
+                                alert.show();
+                            }
+                        });
                     }
 
                     @Override
