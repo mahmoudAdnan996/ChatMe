@@ -21,6 +21,9 @@ import chatme.apps.madnan.chatme.R;
 import chatme.apps.madnan.chatme.model.Users;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static chatme.apps.madnan.chatme.utils.Constants.USERS_TABLE;
+import static chatme.apps.madnan.chatme.utils.Constants.USER_ID;
+
 public class UsersActivity extends AppCompatActivity {
 
     RecyclerView userRec;
@@ -39,7 +42,7 @@ public class UsersActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child(USERS_TABLE);
         mDatabaseReference.keepSynced(true);
 
         userRec = (RecyclerView)findViewById(R.id.users_recView);
@@ -66,7 +69,7 @@ public class UsersActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(UsersActivity.this, UserProfile.class);
-                        intent.putExtra("userId", user_id);
+                        intent.putExtra(USER_ID, user_id);
                         startActivity(intent);
                     }
                 });

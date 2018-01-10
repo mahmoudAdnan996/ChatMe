@@ -29,6 +29,16 @@ import java.util.HashMap;
 
 import chatme.apps.madnan.chatme.R;
 
+import static chatme.apps.madnan.chatme.utils.Constants.ADDRESS;
+import static chatme.apps.madnan.chatme.utils.Constants.DEVICE_TOKEN;
+import static chatme.apps.madnan.chatme.utils.Constants.EMAIL;
+import static chatme.apps.madnan.chatme.utils.Constants.IMAGE;
+import static chatme.apps.madnan.chatme.utils.Constants.MOBILE;
+import static chatme.apps.madnan.chatme.utils.Constants.STATUS;
+import static chatme.apps.madnan.chatme.utils.Constants.THUMP_IMAGE;
+import static chatme.apps.madnan.chatme.utils.Constants.USERS_TABLE;
+import static chatme.apps.madnan.chatme.utils.Constants.USER_NAME;
+
 public class SignUp extends AppCompatActivity {
 
     TextInputLayout userName, email, password, retypePassword;
@@ -117,22 +127,22 @@ public class SignUp extends AppCompatActivity {
                             final String deviceToken = FirebaseInstanceId.getInstance().getToken();
 
                             // add cild
-                            mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
+                            mDatabase = FirebaseDatabase.getInstance().getReference().child(USERS_TABLE).child(userId);
                             HashMap<String, String> userMap = new HashMap<>();
-                            userMap.put("username", username);
-                            userMap.put("email", email);
-                            userMap.put("status", "Status");
-                            userMap.put("image", "default");
-                            userMap.put("mobile", "000-000-000");
-                            userMap.put("address", "Country-City");
-                            userMap.put("thumb_image", "default");
+                            userMap.put(USER_NAME, username);
+                            userMap.put(EMAIL, email);
+                            userMap.put(STATUS, "Status");
+                            userMap.put(IMAGE, "default");
+                            userMap.put(MOBILE, "000-000-000");
+                            userMap.put(ADDRESS, "Country-City");
+                            userMap.put(THUMP_IMAGE, "default");
                             mDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){
                                         dialog.dismiss();
 
-                                        mDatabase.child(userId).child("device_token").setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        mDatabase.child(userId).child(DEVICE_TOKEN).setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Intent intent = new Intent(SignUp.this, MainActivity.class);

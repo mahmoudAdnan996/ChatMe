@@ -27,6 +27,9 @@ import com.google.firebase.database.ServerValue;
 import chatme.apps.madnan.chatme.R;
 import chatme.apps.madnan.chatme.ui.adapter.SectionsPagerAdapter;
 
+import static chatme.apps.madnan.chatme.utils.Constants.ONLINE;
+import static chatme.apps.madnan.chatme.utils.Constants.USERS_TABLE;
+
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -49,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         if (currentUser != null){
-            mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+            mUserRef = FirebaseDatabase.getInstance().getReference().child(USERS_TABLE).child(mAuth.getCurrentUser().getUid());
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
             sendToWelcome();
         }
         else {
-            mUserRef.child("online").setValue("true");
+            mUserRef.child(ONLINE).setValue("true");
         }
     }
 
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
 
         if (currentUser != null){
-            mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
+            mUserRef.child(ONLINE).setValue(ServerValue.TIMESTAMP);
         }
     }
 
@@ -169,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 FirebaseAuth.getInstance().signOut();
-                                mUserRef.child("online").setValue(false);
+                                mUserRef.child(ONLINE).setValue(false);
                                 sendToWelcome();
                             }
                         })

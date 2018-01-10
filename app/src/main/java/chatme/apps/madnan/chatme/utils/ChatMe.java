@@ -11,14 +11,17 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
+import static chatme.apps.madnan.chatme.utils.Constants.ONLINE;
+import static chatme.apps.madnan.chatme.utils.Constants.USERS_TABLE;
+
 /**
  * Created by mahmoud adnan on 11/29/2017.
  */
 
 public class ChatMe extends Application {
 
-//    private DatabaseReference mUserDatabase;
-//    private FirebaseAuth mAuth;
+    private DatabaseReference mUserDatabase;
+    private FirebaseAuth mAuth;
 
     @Override
     public void onCreate() {
@@ -34,24 +37,26 @@ public class ChatMe extends Application {
         built.setLoggingEnabled(true);
         Picasso.setSingletonInstance(built);
 
-//        mAuth = FirebaseAuth.getInstance();
-//        mUserDatabase = FirebaseDatabase.getInstance().getReference()
-//                .child("Users").child(mAuth.getCurrentUser().getUid());
-//
-//        mUserDatabase.addValueEventListener(new ValueEventListener() {
-//
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                if (dataSnapshot != null){
-//                    mUserDatabase.child("online").onDisconnect().setValue(false);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
+        mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() != null){
+            mUserDatabase = FirebaseDatabase.getInstance().getReference()
+                    .child(USERS_TABLE).child(mAuth.getCurrentUser().getUid());
+
+            mUserDatabase.addValueEventListener(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if (dataSnapshot != null){
+                        mUserDatabase.child(ONLINE).onDisconnect().setValue(false);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 }

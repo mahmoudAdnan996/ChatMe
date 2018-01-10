@@ -49,6 +49,15 @@ import chatme.apps.madnan.chatme.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 
+import static chatme.apps.madnan.chatme.utils.Constants.ADDRESS;
+import static chatme.apps.madnan.chatme.utils.Constants.EMAIL;
+import static chatme.apps.madnan.chatme.utils.Constants.IMAGE;
+import static chatme.apps.madnan.chatme.utils.Constants.MOBILE;
+import static chatme.apps.madnan.chatme.utils.Constants.STATUS;
+import static chatme.apps.madnan.chatme.utils.Constants.THUMP_IMAGE;
+import static chatme.apps.madnan.chatme.utils.Constants.USERS_TABLE;
+import static chatme.apps.madnan.chatme.utils.Constants.USER_NAME;
+
 public class Profile extends AppCompatActivity {
 
     public static final int IMAGE_GALLARY_REQUEST = 2;
@@ -78,20 +87,20 @@ public class Profile extends AppCompatActivity {
 
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String currentUserId = mCurrentUser.getUid();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child(USERS_TABLE).child(currentUserId);
         mUserDatabase.keepSynced(true);
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                String username = dataSnapshot.child("username").getValue().toString();
-                String status = dataSnapshot.child("status").getValue().toString();
-                String mobile = dataSnapshot.child("mobile").getValue().toString();
-                String email = dataSnapshot.child("email").getValue().toString();
-                String address = dataSnapshot.child("address").getValue().toString();
-                final String image = dataSnapshot.child("image").getValue().toString();
-                String thumbImage = dataSnapshot.child("thumb_image").getValue().toString();
+                String username = dataSnapshot.child(USER_NAME).getValue().toString();
+                String status = dataSnapshot.child(STATUS).getValue().toString();
+                String mobile = dataSnapshot.child(MOBILE).getValue().toString();
+                String email = dataSnapshot.child(EMAIL).getValue().toString();
+                String address = dataSnapshot.child(ADDRESS).getValue().toString();
+                final String image = dataSnapshot.child(IMAGE).getValue().toString();
+                String thumbImage = dataSnapshot.child(THUMP_IMAGE).getValue().toString();
 
                 usernameTV.setText(username);
                 statusTV.setText(status);
@@ -201,7 +210,7 @@ public class Profile extends AppCompatActivity {
                         if (task.isSuccessful()){
 
                             String downloadUrl = task.getResult().getDownloadUrl().toString();
-                            mUserDatabase.child("image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            mUserDatabase.child(IMAGE).setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){
@@ -283,8 +292,8 @@ public class Profile extends AppCompatActivity {
 
                                     if (task.isSuccessful()){
                                         Map updatedInfo = new HashMap();
-                                        updatedInfo.put("image", downloadUrl);
-                                        updatedInfo.put("thumb_image", thumb_downloadUrl);
+                                        updatedInfo.put(IMAGE, downloadUrl);
+                                        updatedInfo.put(THUMP_IMAGE, thumb_downloadUrl);
 
                                         mUserDatabase.updateChildren(updatedInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -326,7 +335,7 @@ public class Profile extends AppCompatActivity {
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                         String editedStatus = input.toString();
                         statusTV.setText(editedStatus);
-                        mUserDatabase.child("status").setValue(editedStatus).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        mUserDatabase.child(STATUS).setValue(editedStatus).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()){
@@ -411,7 +420,7 @@ public class Profile extends AppCompatActivity {
                                 }
                             }
                         });
-                        mUserDatabase.child("email").setValue(editedEmail);
+                        mUserDatabase.child(EMAIL).setValue(editedEmail);
                     }
                 })
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -438,7 +447,7 @@ public class Profile extends AppCompatActivity {
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                         String editedAddress = input.toString();
                         addressTV.setText(editedAddress);
-                        mUserDatabase.child("address").setValue(editedAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        mUserDatabase.child(ADDRESS).setValue(editedAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()){

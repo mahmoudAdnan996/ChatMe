@@ -32,6 +32,14 @@ import java.util.Map;
 
 import chatme.apps.madnan.chatme.R;
 
+import static chatme.apps.madnan.chatme.utils.Constants.FRIENDS_TABLE;
+import static chatme.apps.madnan.chatme.utils.Constants.FRIEND_REQUEST_TABLE;
+import static chatme.apps.madnan.chatme.utils.Constants.IMAGE;
+import static chatme.apps.madnan.chatme.utils.Constants.STATUS;
+import static chatme.apps.madnan.chatme.utils.Constants.USERS_TABLE;
+import static chatme.apps.madnan.chatme.utils.Constants.USER_ID;
+import static chatme.apps.madnan.chatme.utils.Constants.USER_NAME;
+
 public class UserProfile extends AppCompatActivity {
 
     ImageView userProfileImg;
@@ -60,12 +68,12 @@ public class UserProfile extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
 
-        final String userId = getIntent().getStringExtra("userId");
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
+        final String userId = getIntent().getStringExtra(USER_ID);
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child(USERS_TABLE).child(userId);
         mDatabaseReference.keepSynced(true);
 
-        mFriendReqDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_req");
-        mFriendDatabase = FirebaseDatabase.getInstance().getReference().child("Friends");
+        mFriendReqDatabase = FirebaseDatabase.getInstance().getReference().child(FRIEND_REQUEST_TABLE);
+        mFriendDatabase = FirebaseDatabase.getInstance().getReference().child(FRIENDS_TABLE);
         mRootRef = FirebaseDatabase.getInstance().getReference();
 
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -95,9 +103,9 @@ public class UserProfile extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                String name = dataSnapshot.child("username").getValue().toString();
-                String userStatus = dataSnapshot.child("status").getValue().toString();
-                final String image = dataSnapshot.child("image").getValue().toString();
+                String name = dataSnapshot.child(USER_NAME).getValue().toString();
+                String userStatus = dataSnapshot.child(STATUS).getValue().toString();
+                final String image = dataSnapshot.child(IMAGE).getValue().toString();
                 mFriendDatabase.child(userId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

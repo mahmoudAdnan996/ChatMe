@@ -26,6 +26,9 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import chatme.apps.madnan.chatme.R;
 
+import static chatme.apps.madnan.chatme.utils.Constants.DEVICE_TOKEN;
+import static chatme.apps.madnan.chatme.utils.Constants.USERS_TABLE;
+
 public class Login extends AppCompatActivity {
 
     TextInputLayout userName, password;
@@ -54,7 +57,7 @@ public class Login extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child(USERS_TABLE);
 
         progressDialog = new MaterialDialog.Builder(this);
 
@@ -104,7 +107,7 @@ public class Login extends AppCompatActivity {
                             String deviceToken = FirebaseInstanceId.getInstance().getToken();
                             String currentUserId = mAuth.getCurrentUser().getUid();
 
-                            mDatabaseReference.child(currentUserId).child("device_token").setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            mDatabaseReference.child(currentUserId).child(DEVICE_TOKEN).setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Intent intent = new Intent(Login.this, MainActivity.class);

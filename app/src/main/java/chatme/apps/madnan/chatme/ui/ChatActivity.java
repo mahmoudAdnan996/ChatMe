@@ -14,10 +14,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,20 +29,36 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import chatme.apps.madnan.chatme.R;
+import chatme.apps.madnan.chatme.model.Messages;
+import chatme.apps.madnan.chatme.ui.adapter.MessageAdapter;
 import chatme.apps.madnan.chatme.utils.GetTimeAgo;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static chatme.apps.madnan.chatme.utils.Constants.CHAT_TABLE;
+import static chatme.apps.madnan.chatme.utils.Constants.IMAGE;
+import static chatme.apps.madnan.chatme.utils.Constants.MESSAGES_TABLE;
+import static chatme.apps.madnan.chatme.utils.Constants.ONLINE;
+import static chatme.apps.madnan.chatme.utils.Constants.USERS_TABLE;
+import static chatme.apps.madnan.chatme.utils.Constants.USER_ID;
+import static chatme.apps.madnan.chatme.utils.Constants.USER_NAME;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -46,13 +66,23 @@ public class ChatActivity extends AppCompatActivity {
     public static final int IMAGE_GALLERY_REQUEST = 2;
 
     Toolbar mToolbar;
-    private String chatUserId, username, imageUrl;
+
     DatabaseReference mUserDatabase;
+    DatabaseReference mRootRef;
+    FirebaseAuth mAuth;
+
     TextView nameTV, lastSeenTV;
     CircleImageView chatUserImage;
     ImageButton sendImg, sendBtn;
+    EditText messageET;
+
+    RecyclerView messagesRV;
 
     Uri uri;
+    private String chatUserId, username, imageUrl, mCurrentUserId;
+
+    private List<Messages> messagesList;
+    MessageAdapter messageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,27 +92,36 @@ public class ChatActivity extends AppCompatActivity {
         mToolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
-
-
-        sendImg = (ImageButton)findViewById(R.id.sendImageBTN);
-        sendBtn = (ImageButton)findViewById(R.id.sendBTN);
-
-        chatUserId = getIntent().getStringExtra("userId");
-        username = getIntent().getStringExtra("username");
-        imageUrl = getIntent().getStringExtra("image");
-
-        mUserDatabase = FirebaseDatabase.getInstance().getReference();
-
         LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View action_bar_view = inflater.inflate(R.layout.chat_custom_bar, null);
         actionBar.setCustomView(action_bar_view);
 
+        messagesList = new ArrayList<>();
+        messageAdapter = new MessageAdapter(messagesList, ChatActivity.this);
+
+        mUserDatabase = FirebaseDatabase.getInstance().getReference();
+        mRootRef = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+
+        sendImg = (ImageButton)findViewById(R.id.sendImageBTN);
+        sendBtn = (ImageButton)findViewById(R.id.sendBTN);
+        messageET = (EditText)findViewById(R.id.sendMessageET);
         nameTV = (TextView)action_bar_view.findViewById(R.id.chatUserName);
         lastSeenTV = (TextView)action_bar_view.findViewById(R.id.chatLastSeen);
         chatUserImage = (CircleImageView)action_bar_view.findViewById(R.id.custom_bar_image);
+
+        messagesRV = (RecyclerView)findViewById(R.id.messagesRV);
+        messagesRV.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
+        messagesRV.setHasFixedSize(true);
+        messagesRV.setAdapter(messageAdapter);
+
+        chatUserId = getIntent().getStringExtra(USER_ID);
+        username = getIntent().getStringExtra(USER_NAME);
+        imageUrl = getIntent().getStringExtra(IMAGE);
+        mCurrentUserId = mAuth.getCurrentUser().getUid();
+
 
         Picasso.with(ChatActivity.this).load(imageUrl).networkPolicy(NetworkPolicy.OFFLINE)
                 .placeholder(R.drawable.profile).into(chatUserImage, new Callback() {
@@ -98,20 +137,96 @@ public class ChatActivity extends AppCompatActivity {
         });
         nameTV.setText(username);
 
-        mUserDatabase.child("Users").child(chatUserId).addValueEventListener(new ValueEventListener() {
+        mUserDatabase.child(USERS_TABLE).child(chatUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String online = dataSnapshot.child("online").getValue().toString();
+                String online = dataSnapshot.child(ONLINE).getValue().toString();
                 if (online.equals("true")){
                     lastSeenTV.setText("online");
                 }
                 else {
                     GetTimeAgo get_time_ago = new GetTimeAgo();
-                    long lastTime = Long.parseLong(online);
-                    String lastSeenTime = get_time_ago.getTimeAgo(lastTime, getApplicationContext());
-                    lastSeenTV.setText(lastSeenTime);
+                    try{
+                        long lastTime = Long.valueOf(online).longValue();
+                        String lastSeenTime = get_time_ago.getTimeAgo(lastTime, getApplicationContext());
+                        lastSeenTV.setText(lastSeenTime);
 
+                    }catch (NumberFormatException e){
+                        lastSeenTV.setText("offline");
+                    }
                 }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mRootRef.child(CHAT_TABLE).child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (!dataSnapshot.hasChild(chatUserId)){
+
+                    Map chatAddMap = new HashMap();
+                    chatAddMap.put("seen", false);
+                    chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
+
+                    Map chatUserMap = new HashMap();
+                    chatUserMap.put("Chat/" + mCurrentUserId + "/" + chatUserId, chatAddMap);
+                    chatUserMap.put("Chat/" + chatUserId + "/" + mCurrentUserId, chatAddMap);
+
+                    mRootRef.updateChildren(chatUserMap, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError != null){
+                                Log.e("CHAT_LOG", databaseError.getMessage());
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMessage();
+            }
+        });
+
+        loadMessages();
+    }
+
+    private void loadMessages() {
+
+        mRootRef.child(MESSAGES_TABLE).child(mCurrentUserId).child(chatUserId).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                Messages message = dataSnapshot.getValue(Messages.class);
+                messagesList.add(message);
+                messageAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
@@ -194,5 +309,42 @@ public class ChatActivity extends AppCompatActivity {
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
+    }
+
+    public void sendMessage() {
+        String messageText = messageET.getText().toString();
+
+        if (!TextUtils.isEmpty(messageText)){
+
+            String currentUserRef = "messages/" + mCurrentUserId + "/" + chatUserId;
+            String chatUserRef = "messages/" + chatUserId + "/" + mCurrentUserId;
+
+            DatabaseReference userMessagePush = mRootRef.child("messages").child(mCurrentUserId)
+                    .child(chatUserId).push();
+
+            String push_id = userMessagePush.getKey();
+
+            Map messagesMap = new HashMap();
+            messagesMap.put("message", messageText);
+            messagesMap.put("seen", false);
+            messagesMap.put( "type", "text");
+            messagesMap.put("time", ServerValue.TIMESTAMP);
+            messagesMap.put("from", mCurrentUserId);
+
+            Map messageUserMap = new HashMap();
+            messageUserMap.put(currentUserRef + "/" + push_id, messagesMap);
+            messageUserMap.put(chatUserRef + "/" + push_id, messagesMap);
+
+            mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+                    if (databaseError != null){
+                        Log.e("CHAT_ERROR", databaseError.getMessage());
+                    }
+                    messageET.setText("");
+                }
+            });
+        }
     }
 }

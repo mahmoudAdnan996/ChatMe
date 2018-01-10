@@ -32,6 +32,12 @@ import chatme.apps.madnan.chatme.model.Users;
 import chatme.apps.madnan.chatme.ui.UserProfile;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static chatme.apps.madnan.chatme.utils.Constants.FRIEND_REQUEST_TABLE;
+import static chatme.apps.madnan.chatme.utils.Constants.THUMP_IMAGE;
+import static chatme.apps.madnan.chatme.utils.Constants.USERS_TABLE;
+import static chatme.apps.madnan.chatme.utils.Constants.USER_ID;
+import static chatme.apps.madnan.chatme.utils.Constants.USER_NAME;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,8 +66,8 @@ public class RequestsFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         currentUserId = mAuth.getCurrentUser().getUid();
-        mRequestsDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_req").child(currentUserId);
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        mRequestsDatabase = FirebaseDatabase.getInstance().getReference().child(FRIEND_REQUEST_TABLE).child(currentUserId);
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child(USERS_TABLE);
         mUserDatabase.keepSynced(true);
 
         requestsRV.setHasFixedSize(true);
@@ -86,8 +92,8 @@ public class RequestsFragment extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        String username = dataSnapshot.child("username").getValue().toString();
-                        String imageUri = dataSnapshot.child("thumb_image").getValue().toString();
+                        String username = dataSnapshot.child(USER_NAME).getValue().toString();
+                        String imageUri = dataSnapshot.child(THUMP_IMAGE).getValue().toString();
 
                         viewHolder.setName(username);
                         viewHolder.setThumbImage(imageUri, getContext());
@@ -97,7 +103,7 @@ public class RequestsFragment extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 Intent intent = new Intent(getActivity(), UserProfile.class);
-                                intent.putExtra("userId", userId);
+                                intent.putExtra(USER_ID, userId);
                                 startActivity(intent);
                             }
                         });

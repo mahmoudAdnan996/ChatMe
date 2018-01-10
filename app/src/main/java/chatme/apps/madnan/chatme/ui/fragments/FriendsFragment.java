@@ -34,6 +34,14 @@ import chatme.apps.madnan.chatme.ui.UserProfile;
 import chatme.apps.madnan.chatme.ui.UsersActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static chatme.apps.madnan.chatme.utils.Constants.FRIENDS_TABLE;
+import static chatme.apps.madnan.chatme.utils.Constants.IMAGE;
+import static chatme.apps.madnan.chatme.utils.Constants.ONLINE;
+import static chatme.apps.madnan.chatme.utils.Constants.THUMP_IMAGE;
+import static chatme.apps.madnan.chatme.utils.Constants.USERS_TABLE;
+import static chatme.apps.madnan.chatme.utils.Constants.USER_ID;
+import static chatme.apps.madnan.chatme.utils.Constants.USER_NAME;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,8 +69,8 @@ public class FriendsFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         currentUserId = mAuth.getCurrentUser().getUid();
-        mFriendsDatabase = FirebaseDatabase.getInstance().getReference().child("Friends").child(currentUserId);
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        mFriendsDatabase = FirebaseDatabase.getInstance().getReference().child(FRIENDS_TABLE).child(currentUserId);
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child(USERS_TABLE);
         mUserDatabase.keepSynced(true);
 
         friendsRv.setHasFixedSize(true);
@@ -90,11 +98,11 @@ public class FriendsFragment extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        final String username = dataSnapshot.child("username").getValue().toString();
-                        final String imageUri = dataSnapshot.child("thumb_image").getValue().toString();
+                        final String username = dataSnapshot.child(USER_NAME).getValue().toString();
+                        final String imageUri = dataSnapshot.child(THUMP_IMAGE).getValue().toString();
 
-                        if (dataSnapshot.hasChild("online")){
-                            String userOnline = dataSnapshot.child("online").getValue().toString();
+                        if (dataSnapshot.hasChild(ONLINE)){
+                            String userOnline = dataSnapshot.child(ONLINE).getValue().toString();
                             viewHolder.setUserOnline(userOnline);
 
                         }
@@ -115,14 +123,14 @@ public class FriendsFragment extends Fragment {
                                     public void onClick(DialogInterface dialog, int which) {
                                         if (items[which].equals("Open Profile")){
                                             Intent intent = new Intent(getActivity(), UserProfile.class);
-                                            intent.putExtra("userId", userId);
+                                            intent.putExtra(USER_ID, userId);
                                             startActivity(intent);
 
                                         }else if (items[which].equals("Start Chat")){
                                             Intent intent = new Intent(getActivity(), ChatActivity.class);
-                                            intent.putExtra("userId", userId);
-                                            intent.putExtra("username", username);
-                                            intent.putExtra("image", imageUri);
+                                            intent.putExtra(USER_ID, userId);
+                                            intent.putExtra(USER_NAME, username);
+                                            intent.putExtra(IMAGE, imageUri);
                                             startActivity(intent);
                                         }
                                     }

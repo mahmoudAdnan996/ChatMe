@@ -18,7 +18,15 @@
         app:titleTextColor="@android:color/white">
     </android.support.v7.widget.Toolbar>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/messagesRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:layout_above="@id/messageLayout"/>
+
     <LinearLayout
+        android:id="@+id/messageLayout"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:background="#FFF"
@@ -27,7 +35,7 @@
         <ImageButton
             android:id="@+id/sendImageBTN"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:background="@mipmap/send_image"
             android:onClick="sendImage"
             android:layout_weight="1"/>
@@ -40,7 +48,7 @@
         <ImageButton
             android:id="@+id/sendBTN"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:background="@mipmap/send"
             android:layout_weight="1"/>
     </LinearLayout>
