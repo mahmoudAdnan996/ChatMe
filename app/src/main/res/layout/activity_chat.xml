@@ -44,7 +44,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="6"
-            android:hint="Write message"/>
+            android:hint="Write message"
+            android:background="@color/trans"/>
         <ImageButton
             android:id="@+id/sendBTN"
             android:layout_width="0dp"

@@ -27,6 +27,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -36,6 +38,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -52,9 +57,13 @@ import chatme.apps.madnan.chatme.ui.adapter.MessageAdapter;
 import chatme.apps.madnan.chatme.utils.GetTimeAgo;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static chatme.apps.madnan.chatme.utils.Constants.CAMERA_CAPTURE_IMAGE_REQUEST_CODE;
 import static chatme.apps.madnan.chatme.utils.Constants.CHAT_TABLE;
 import static chatme.apps.madnan.chatme.utils.Constants.IMAGE;
+import static chatme.apps.madnan.chatme.utils.Constants.IMAGE_GALLERY_REQUEST;
 import static chatme.apps.madnan.chatme.utils.Constants.MESSAGES_TABLE;
+import static chatme.apps.madnan.chatme.utils.Constants.MESSAGE_IMAGE;
+import static chatme.apps.madnan.chatme.utils.Constants.MESSAGE_TEXT;
 import static chatme.apps.madnan.chatme.utils.Constants.ONLINE;
 import static chatme.apps.madnan.chatme.utils.Constants.USERS_TABLE;
 import static chatme.apps.madnan.chatme.utils.Constants.USER_ID;
@@ -62,14 +71,12 @@ import static chatme.apps.madnan.chatme.utils.Constants.USER_NAME;
 
 public class ChatActivity extends AppCompatActivity {
 
-    public static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 30;
-    public static final int IMAGE_GALLERY_REQUEST = 2;
-
     Toolbar mToolbar;
 
     DatabaseReference mUserDatabase;
     DatabaseReference mRootRef;
     FirebaseAuth mAuth;
+    StorageReference mImageMessageRef;
 
     TextView nameTV, lastSeenTV;
     CircleImageView chatUserImage;
@@ -104,6 +111,7 @@ public class ChatActivity extends AppCompatActivity {
         mUserDatabase = FirebaseDatabase.getInstance().getReference();
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
+        mImageMessageRef = FirebaseStorage.getInstance().getReference();
 
         sendImg = (ImageButton)findViewById(R.id.sendImageBTN);
         sendBtn = (ImageButton)findViewById(R.id.sendBTN);
@@ -211,6 +219,13 @@ public class ChatActivity extends AppCompatActivity {
 
                 Messages message = dataSnapshot.getValue(Messages.class);
                 messagesList.add(message);
+                messagesRV.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Call smooth scroll
+                        messagesRV.smoothScrollToPosition(messageAdapter.getItemCount());
+                    }
+                });
                 messageAdapter.notifyDataSetChanged();
             }
 
@@ -292,6 +307,7 @@ public class ChatActivity extends AppCompatActivity {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap)extras.get("data");
                 uri= getImageUri(getApplicationContext(), imageBitmap);
+                sendImageMessage(uri);
             }
             else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(ChatActivity.this, "Capture iamge cancelled", Toast.LENGTH_LONG).show();
@@ -300,6 +316,7 @@ public class ChatActivity extends AppCompatActivity {
         if (requestCode == IMAGE_GALLERY_REQUEST) {
             if (resultCode == RESULT_OK) {
                 uri = data.getData();
+                sendImageMessage(uri);
                 Log.e("Uri is :", String.valueOf(uri));
             }
         }
@@ -327,7 +344,7 @@ public class ChatActivity extends AppCompatActivity {
             Map messagesMap = new HashMap();
             messagesMap.put("message", messageText);
             messagesMap.put("seen", false);
-            messagesMap.put( "type", "text");
+            messagesMap.put( "type", MESSAGE_TEXT);
             messagesMap.put("time", ServerValue.TIMESTAMP);
             messagesMap.put("from", mCurrentUserId);
 
@@ -346,5 +363,47 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    // send image
+    public void sendImageMessage(Uri imageUri){
+
+        final String currentUserRef = "messages/" + mCurrentUserId + "/" + chatUserId;
+        final String chatUserRef = "messages/" + chatUserId + "/" + mCurrentUserId;
+
+        DatabaseReference userMessagePush = mRootRef.child("messages").child(mCurrentUserId)
+                .child(chatUserId).push();
+
+        final String push_id = userMessagePush.getKey();
+
+        StorageReference filepath = mImageMessageRef.child("message_images").child(push_id + ".jpg");
+        filepath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if (task.isSuccessful()){
+                    String download_url = task.getResult().getDownloadUrl().toString();
+
+                    Map messagesMap = new HashMap();
+                    messagesMap.put("message", download_url);
+                    messagesMap.put("seen", false);
+                    messagesMap.put("type", MESSAGE_IMAGE);
+                    messagesMap.put("time", ServerValue.TIMESTAMP);
+                    messagesMap.put("from", mCurrentUserId);
+
+                    Map messageUserMap = new HashMap();
+                    messageUserMap.put(currentUserRef + "/" + push_id, messagesMap);
+                    messageUserMap.put(chatUserRef + "/" + push_id, messagesMap);
+
+                    mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError != null){
+                                Log.e("CHAT_IMAGE_ERROR", databaseError.getMessage());
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 }

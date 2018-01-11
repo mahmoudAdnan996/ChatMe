@@ -2,6 +2,7 @@ package chatme.apps.madnan.chatme.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import java.util.List;
 import chatme.apps.madnan.chatme.R;
 import chatme.apps.madnan.chatme.model.Messages;
 
+import static chatme.apps.madnan.chatme.utils.Constants.MESSAGE_IMAGE;
+import static chatme.apps.madnan.chatme.utils.Constants.MESSAGE_TEXT;
 import static chatme.apps.madnan.chatme.utils.Constants.MY_MESSAGE_TYPE;
 import static chatme.apps.madnan.chatme.utils.Constants.THUMP_IMAGE;
 import static chatme.apps.madnan.chatme.utils.Constants.USERS_TABLE;
@@ -41,6 +44,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     Context context;
 
+    Messages messages;
+
     public MessageAdapter(List<Messages> messagesList, Context context) {
         this.messagesList = messagesList;
         this.context = context;
@@ -49,7 +54,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        if (viewType == 123){
+        if (viewType == MY_MESSAGE_TYPE){
            return new MyMessageViewHolder(LayoutInflater.from(parent.getContext())
                    .inflate(R.layout.my_single_message, parent, false));
         }else {
@@ -66,18 +71,39 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (viewType == MY_MESSAGE_TYPE){
             MyMessageViewHolder myMessageViewHolder = (MyMessageViewHolder)holder;
-            myMessageViewHolder.setMyMessage(messagesList.get(position));
+            if (messagesList.get(position).getType().equals(MESSAGE_TEXT)){
+                myMessageViewHolder.setMyMessage(messagesList.get(position));
+                myMessageViewHolder.messageImage.setVisibility(View.GONE);
+            }
+            if (messagesList.get(position).getType().equals(MESSAGE_IMAGE)){
+                myMessageViewHolder.messageText.setVisibility(View.GONE);
+                myMessageViewHolder.setMyMessageImage(messagesList.get(position));
+            }
+            else {
+                Log.e("Error is", "error occurred");
+            }
 
-        }else {
+
+        }
+        else {
             final MessageViewHolder messageViewHolder = (MessageViewHolder)holder;
             mUserDatabaseRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     String image = dataSnapshot.child(THUMP_IMAGE).getValue().toString();
-                    messageViewHolder.setUserMessageView(messagesList.get(position), context);
+                    if (messagesList.get(position).getType().equals(MESSAGE_TEXT)){
+                        messageViewHolder.setUserMessageView(messagesList.get(position), context);
+                        messageViewHolder.userMessageImage.setVisibility(View.GONE);
+                    }
+                    if (messagesList.get(position).getType().equals(MESSAGE_IMAGE)){
+                        messageViewHolder.userMessage.setVisibility(View.GONE);
+                        messageViewHolder.setUserMessageImage(messagesList.get(position));
+                    }
+                    else {
+                        Log.e("Error is", "error occurred");
+                    }
                     Picasso.with(messageViewHolder.userImg.getContext()).load(image)
                             .placeholder(R.drawable.profile).into(messageViewHolder.userImg);
-
                 }
 
                 @Override
@@ -90,7 +116,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        Messages messages = messagesList.get(position);
+        messages = messagesList.get(position);
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
         fromId = messages.getFrom();

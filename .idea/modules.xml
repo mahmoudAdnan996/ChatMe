@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ChatMe.iml" filepath="$PROJECT_DIR$/.idea/ChatMe.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ChatMe.iml" filepath="$PROJECT_DIR$/ChatMe.iml" />
+      <module fileurl="file://C:\Users\mahmoud.adnan\AndroidStudioProjects\ChatMe\.idea\ChatMe.iml" filepath="C:\Users\mahmoud.adnan\AndroidStudioProjects\ChatMe\.idea\ChatMe.iml" />
       <module fileurl="file://C:\Users\mahmoud.adnan\AndroidStudioProjects\ChatMe\ChatMe.iml" filepath="C:\Users\mahmoud.adnan\AndroidStudioProjects\ChatMe\ChatMe.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
