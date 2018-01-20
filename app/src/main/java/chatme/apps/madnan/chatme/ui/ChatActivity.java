@@ -216,22 +216,21 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Map chatShowMap = new HashMap();
-        chatShowMap.put("seen", true);
-        chatShowMap.put("timestamp", ServerValue.TIMESTAMP);
 
-        Map chatUserMap = new HashMap();
-        chatUserMap.put("Chat/" + mCurrentUserId + "/" + chatUserId, chatShowMap);
-
-        mRootRef.updateChildren(chatUserMap, new DatabaseReference.CompletionListener() {
+        mRootRef.child(MESSAGES_TABLE).child(mCurrentUserId).child(chatUserId).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError != null){
-                    Log.e("CHAT_LOG", databaseError.getMessage());
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                    String messageId = dataSnapshot1.getKey().toString();
+                    mRootRef.child(MESSAGES_TABLE).child(mCurrentUserId).child(chatUserId).child(messageId).child("seen").setValue(true);
                 }
             }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
         });
-        mRootRef.child(CHAT_TABLE).child(mCurrentUserId).child(chatUserId).child("seen").setValue(true);
     }
 
     //region Chat Operations

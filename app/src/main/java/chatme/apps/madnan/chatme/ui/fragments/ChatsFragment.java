@@ -95,10 +95,11 @@ public class ChatsFragment extends Fragment {
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         String data = dataSnapshot.child("message").getValue().toString();
                         String type = dataSnapshot.child("type").getValue().toString();
+                        boolean seen = (boolean) dataSnapshot.child("seen").getValue();
                         if (type.equals("text")){
-                            viewHolder.setMessage(data, model.isSeen());
+                            viewHolder.setMessage(data, seen);
                         }else {
-                            viewHolder.setMessage("Image", model.isSeen());
+                            viewHolder.setMessage("Image", seen);
                         }
 
                     }
