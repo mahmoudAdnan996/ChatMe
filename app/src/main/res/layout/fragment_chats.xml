@@ -4,10 +4,9 @@
     android:layout_height="match_parent"
     tools:context="chatme.apps.madnan.chatme.ui.fragments.ChatsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chatsRV"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hellp From Chats Page" />
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

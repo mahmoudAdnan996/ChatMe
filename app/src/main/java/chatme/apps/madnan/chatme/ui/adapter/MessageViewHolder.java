@@ -38,7 +38,17 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setUserMessageImage(Messages messages){
-        Picasso.with(userMessageImage.getContext()).load(messages.getMessage())
-                .placeholder(R.drawable.profile).into(userMessageImage);
+        userMessageImage.setVisibility(View.GONE);
+        Picasso.with(userMessageImage.getContext()).load(messages.getMessage()).into(userMessageImage, new Callback() {
+            @Override
+            public void onSuccess() {
+                userMessageImage.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 }

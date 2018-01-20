@@ -71,6 +71,7 @@ import static chatme.apps.madnan.chatme.utils.Constants.USER_NAME;
 
 public class ChatActivity extends AppCompatActivity {
 
+    //region Init
     Toolbar mToolbar;
 
     DatabaseReference mUserDatabase;
@@ -91,6 +92,7 @@ public class ChatActivity extends AppCompatActivity {
     private List<Messages> messagesList;
     MessageAdapter messageAdapter;
 
+    //endregion
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,7 +142,7 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void onError() {
-                Picasso.with(ChatActivity.this).load(imageUrl).placeholder(R.drawable.profile).into(chatUserImage);
+                Picasso.with(ChatActivity.this).load(imageUrl).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.profile).into(chatUserImage);
             }
         });
         nameTV.setText(username);
@@ -211,6 +213,28 @@ public class ChatActivity extends AppCompatActivity {
         loadMessages();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Map chatShowMap = new HashMap();
+        chatShowMap.put("seen", true);
+        chatShowMap.put("timestamp", ServerValue.TIMESTAMP);
+
+        Map chatUserMap = new HashMap();
+        chatUserMap.put("Chat/" + mCurrentUserId + "/" + chatUserId, chatShowMap);
+
+        mRootRef.updateChildren(chatUserMap, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null){
+                    Log.e("CHAT_LOG", databaseError.getMessage());
+                }
+            }
+        });
+        mRootRef.child(CHAT_TABLE).child(mCurrentUserId).child(chatUserId).child("seen").setValue(true);
+    }
+
+    //region Chat Operations
     private void loadMessages() {
 
         mRootRef.child(MESSAGES_TABLE).child(mCurrentUserId).child(chatUserId).addChildEventListener(new ChildEventListener() {
@@ -271,6 +295,9 @@ public class ChatActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    //endregion
+
+    //region Image Operatons
     private void takeImageIntent(){
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},1);

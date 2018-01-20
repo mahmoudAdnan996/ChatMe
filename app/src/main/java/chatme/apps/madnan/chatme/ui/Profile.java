@@ -75,7 +75,6 @@ public class Profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(chatme.apps.madnan.chatme.R.layout.profile_activity);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
 
 
         userProfileIV = (CircleImageView)findViewById(R.id.profile_userIV);
@@ -155,8 +154,9 @@ public class Profile extends AppCompatActivity {
     }
     // capture an image
     private void takeImageIntent(){
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},1);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE},1);
         }else {
             Intent takeImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takeImage.resolveActivity(getPackageManager()) != null){

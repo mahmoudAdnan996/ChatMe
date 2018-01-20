@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import chatme.apps.madnan.chatme.R;
@@ -31,7 +32,17 @@ public class MyMessageViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setMyMessageImage(Messages messages){
-        Picasso.with(messageImage.getContext()).load(messages.getMessage())
-                .placeholder(R.drawable.profile).into(messageImage);
+        messageImage.setVisibility(View.GONE);
+        Picasso.with(messageImage.getContext()).load(messages.getMessage()).into(messageImage, new Callback() {
+            @Override
+            public void onSuccess() {
+                messageImage.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 }

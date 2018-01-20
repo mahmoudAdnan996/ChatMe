@@ -66,7 +66,6 @@ public class UserProfile extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
 
         final String userId = getIntent().getStringExtra(USER_ID);
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child(USERS_TABLE).child(userId);
