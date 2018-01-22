@@ -1,25 +1,44 @@
 <resources>
     <string name="app_name">Chat Me</string>
 
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="Welcome_Signin">Sign in</string>
-    <string name="Welcome_Signup">Sign up</string>
-    <string name="Signup_username_hint">Username</string>
-    <string name="Signup_email_hint">Email</string>
-    <string name="Signup_password_hint">Password</string>
+    <string name="Signin">Sign in</string>
+    <string name="Signup">Sign up</string>
     <string name="Signup_retype_hint">Retype-Password</string>
-    <string name="Signup_button_text">Sign Up</string>
-    <string name="Profile_changeimage_button">Change Image</string>
-    <string name="Profile_changestatus_button">Change Status</string>
-    <string name="Signin_username_hint">Username</string>
-    <string name="Signin_password_hint">Password</string>
-    <string name="Signin_button_text">Sign in</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="action_users">All Users</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="section_format" translatable="false">Hello World from section: %1$d</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_forget_pass">Forget Password</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="title_activity_forget_pass" translatable="false">Forget Password</string>
+    <string name="all_users">All Users</string>
+    <string name="write_message">Write message</string>
+    <string name="enter_email_to_send_your_password">Enter email to send your password</string>
+    <string name="email">Email</string>
+    <string name="restore">Restore</string>
+    <string name="username">Username</string>
+    <string name="current_user_status">Current user status</string>
+    <string name="total_friends">Total Friends</string>
+    <string name="decline_friend_request">Decline friend request</string>
+    <string name="last_seen" translatable="false">last seen</string>
+    <string name="password">Password</string>
+    <string name="forget_your_password">Forget your password ?</string>
+    <string name="status">Status</string>
+    <string name="mobile">Mobile</string>
+    <string name="address">Address</string>
+    <string name="loading_user_data">Loading User Data</string>
+    <string name="please_wait">please wait...</string>
+    <string name="friend">Friends</string>
+    <string name="accept_request">Accept Friend Request</string>
+    <string name="cancel_request">Cancel Friend Request</string>
+    <string name="unfriend">Unfriend</string>
+    <string name="send_request">Send friend request</string>
+    <string name="fill_all_fields">Please fill all fields!</string>
+    <string name="signning_in">Signing In</string>
+    <string name="cant_sign_in">Can\'t sign in, something is wrong,please try again!</string>
+    <string name="signning_up">Signning Up</string>
+    <string name="password_doesnt_match">Password doesn\'t match, check it!</string>
+    <string name="cant_signup">Can\'t sign up, something is wrong,please try again!</string>
+    <string name="requests">REQUESTS</string>
+    <string name="chats">CHATS</string>
+    <string name="friends">FRIENDS</string>
+
 </resources>

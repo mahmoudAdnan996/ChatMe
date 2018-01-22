@@ -61,7 +61,7 @@ public class SignUp extends AppCompatActivity {
 
         mToolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle("Sign Up");
+        mToolbar.setTitle(getString(R.string.Signup));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -90,12 +90,12 @@ public class SignUp extends AppCompatActivity {
 
                 if (nameText.isEmpty() || emailText.isEmpty() || passwordText.isEmpty() || retpedPass.isEmpty()) {
 
-                    Toast.makeText(getBaseContext(), "Plsese Fill All Fields!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), R.string.fill_all_fields, Toast.LENGTH_LONG).show();
                 }
                 else {
                     if (retpedPass.equals(passwordText)) {
-                        progressDialog.title("Registering User");
-                        progressDialog.content("Please wait...");
+                        progressDialog.title(R.string.signning_up);
+                        progressDialog.content(R.string.please_wait);
                         progressDialog.canceledOnTouchOutside(false);
                         progressDialog.progress(true, 0);
                         progressDialog.widgetColorRes(R.color.colorPrimary);
@@ -105,7 +105,7 @@ public class SignUp extends AppCompatActivity {
                         //code
                     }
                     else if (retpedPass != passwordText) {
-                        Toast.makeText(getBaseContext(), "Password doesn't match, check it!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(), R.string.password_doesnt_match, Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -158,7 +158,7 @@ public class SignUp extends AppCompatActivity {
                         }else {
                             dialog.hide();
                             Log.e("ERROR", String.valueOf(task.getException()));
-                            Toast.makeText(getBaseContext(), "Can't register, something is wrong,please try again!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getBaseContext(), R.string.cant_signup, Toast.LENGTH_LONG).show();
                         }
                     }
                 });

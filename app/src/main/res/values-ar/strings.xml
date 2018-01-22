@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Chat Me</string>
+    <string name="Signin">تسجيل الدخول</string>
+    <string name="Signup">التسجيل</string>
+    <string name="Signup_retype_hint">اعادة كلمة السر</string>
+    <string name="all_users">كل المستخدمين</string>
+    <string name="write_message">اكتب رسالة</string>
+    <string name="enter_email_to_send_your_password">أدخل البريد الالكترونى لارسال كلمة السر</string>
+    <string name="email">البريد الالكترونى</string>
+    <string name="restore">أعد كلمة السر</string>
+    <string name="username">اسم المستخدم</string>
+    <string name="current_user_status">حالة المستخدم</string>
+    <string name="total_friends">الاصدقاء</string>
+    <string name="decline_friend_request">رفض طلب الصداقة</string>
+    <string name="password">كلمة السر</string>
+    <string name="forget_your_password">هل نسيت كلمة السر؟</string>
+    <string name="status">الحالة</string>
+    <string name="mobile">رقم التليفون</string>
+    <string name="address">العنوان</string>
+    <string name="loading_user_data">تحميل بيانات المستخدم</string>
+    <string name="please_wait">انتظر من فضلك</string>
+    <string name="friend">صديق</string>
+    <string name="accept_request">قبول طلب الصداقة</string>
+    <string name="cancel_request">الغاء طلب الصداقة</string>
+    <string name="unfriend">إلغاء الصداقة</string>
+    <string name="send_request">إرسال طلب صداقة</string>
+    <string name="fill_all_fields">املئ كل الخانات</string>
+    <string name="signning_in">تسجيل الدخول</string>
+    <string name="cant_sign_in">لا تستطيع تسجيل الدخول, حدث شئ خاطئ</string>
+    <string name="signning_up">تسجيل مستخدم جديد</string>
+    <string name="password_doesnt_match">كلمة السر غير متطابقة</string>
+    <string name="cant_signup">لا تستطيع التسجيل, حدث شئ خاطئ</string>
+</resources>

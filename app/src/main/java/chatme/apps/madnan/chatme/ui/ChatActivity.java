@@ -51,6 +51,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import chatme.apps.madnan.chatme.R;
 import chatme.apps.madnan.chatme.model.Messages;
 import chatme.apps.madnan.chatme.ui.adapter.MessageAdapter;
@@ -72,6 +74,7 @@ import static chatme.apps.madnan.chatme.utils.Constants.USER_NAME;
 public class ChatActivity extends AppCompatActivity {
 
     //region Init
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     DatabaseReference mUserDatabase;
@@ -81,9 +84,14 @@ public class ChatActivity extends AppCompatActivity {
 
     TextView nameTV, lastSeenTV;
     CircleImageView chatUserImage;
-    ImageButton sendImg, sendBtn;
-    EditText messageET;
 
+    @BindView(R.id.sendImageBTN)
+    ImageButton sendImg;
+    @BindView(R.id.sendBTN)
+    ImageButton sendBtn;
+    @BindView(R.id.sendMessageET)
+    EditText messageET;
+    @BindView(R.id.messagesRV)
     RecyclerView messagesRV;
 
     Uri uri;
@@ -98,7 +106,8 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        mToolbar = (Toolbar)findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -115,14 +124,10 @@ public class ChatActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mImageMessageRef = FirebaseStorage.getInstance().getReference();
 
-        sendImg = (ImageButton)findViewById(R.id.sendImageBTN);
-        sendBtn = (ImageButton)findViewById(R.id.sendBTN);
-        messageET = (EditText)findViewById(R.id.sendMessageET);
         nameTV = (TextView)action_bar_view.findViewById(R.id.chatUserName);
         lastSeenTV = (TextView)action_bar_view.findViewById(R.id.chatLastSeen);
         chatUserImage = (CircleImageView)action_bar_view.findViewById(R.id.custom_bar_image);
 
-        messagesRV = (RecyclerView)findViewById(R.id.messagesRV);
         messagesRV.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
         messagesRV.setHasFixedSize(true);
         messagesRV.setAdapter(messageAdapter);
@@ -233,7 +238,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    //region Chat Operations
+
     private void loadMessages() {
 
         mRootRef.child(MESSAGES_TABLE).child(mCurrentUserId).child(chatUserId).addChildEventListener(new ChildEventListener() {
@@ -242,6 +247,8 @@ public class ChatActivity extends AppCompatActivity {
 
                 Messages message = dataSnapshot.getValue(Messages.class);
                 messagesList.add(message);
+
+                // up recyclerview while new item is added
                 messagesRV.post(new Runnable() {
                     @Override
                     public void run() {
@@ -294,7 +301,6 @@ public class ChatActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    //endregion
 
     //region Image Operatons
     private void takeImageIntent(){

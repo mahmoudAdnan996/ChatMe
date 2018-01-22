@@ -10,6 +10,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import chatme.apps.madnan.chatme.R;
 import chatme.apps.madnan.chatme.model.Messages;
 import chatme.apps.madnan.chatme.ui.ChatActivity;
@@ -21,16 +23,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageViewHolder extends RecyclerView.ViewHolder {
 
+    @BindView(R.id.messageUserIV)
     CircleImageView userImg;
+    @BindView(R.id.messageUserTV)
     TextView userMessage;
+    @BindView(R.id.messageUserImg)
     ImageView userMessageImage;
 
     public MessageViewHolder(View itemView) {
         super(itemView);
 
-        userImg = (CircleImageView)itemView.findViewById(R.id.messageUserIV);
-        userMessage = (TextView)itemView.findViewById(R.id.messageUserTV);
-        userMessageImage = (ImageView)itemView.findViewById(R.id.messageUserImg);
+        ButterKnife.bind(this, itemView);
     }
     public void setUserMessageView(Messages messages, Context context){
 

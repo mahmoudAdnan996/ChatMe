@@ -1,7 +1,6 @@
 package chatme.apps.madnan.chatme.ui;
 
 import android.app.ProgressDialog;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,9 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -78,8 +74,8 @@ public class UserProfile extends AppCompatActivity {
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Loading User Data");
-        progressDialog.setMessage("please wait");
+        progressDialog.setTitle(getString(R.string.loading_user_data));
+        progressDialog.setMessage(getString(R.string.please_wait));
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
@@ -109,7 +105,7 @@ public class UserProfile extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String count = String.valueOf(dataSnapshot.getChildrenCount());
-                        friendsCount.setText(count + " " + "Friends");
+                        friendsCount.setText(count + " " + getString(R.string.friend));
                     }
 
                     @Override
@@ -143,14 +139,14 @@ public class UserProfile extends AppCompatActivity {
                             String req_type = dataSnapshot.child(userId).child("request_type").getValue().toString();
                             if (req_type.equals("received")){
                                 currentState = "req_received";
-                                sendRequest.setText("Accept Friend Request");
+                                sendRequest.setText(R.string.accept_request);
 
                                 declinRequest.setVisibility(View.VISIBLE);
                                 declinRequest.setEnabled(true);
 
                             }else if (req_type.equals("sent")){
                                 currentState = "req_sent";
-                                sendRequest.setText("Cancel Friend Request");
+                                sendRequest.setText(R.string.cancel_request);
 
                                 declinRequest.setVisibility(View.INVISIBLE);
                                 declinRequest.setEnabled(false);
@@ -162,7 +158,7 @@ public class UserProfile extends AppCompatActivity {
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.hasChild(userId)){
                                         currentState = "friends";
-                                        sendRequest.setText("Unfriend");
+                                        sendRequest.setText(R.string.unfriend);
 
                                         declinRequest.setVisibility(View.INVISIBLE);
                                         declinRequest.setEnabled(false);
@@ -221,7 +217,7 @@ public class UserProfile extends AppCompatActivity {
                             }
                             sendRequest.setEnabled(true);
                             currentState = "req_sent";
-                            sendRequest.setText("Cancel Friend Request");
+                            sendRequest.setText(R.string.cancel_request);
 
 
                         }
@@ -241,7 +237,7 @@ public class UserProfile extends AppCompatActivity {
 
                             if (databaseError == null){
                                 currentState = "not_friends";
-                                sendRequest.setText("Send friend request");
+                                sendRequest.setText(R.string.send_request);
 
                                 declinRequest.setVisibility(View.INVISIBLE);
                                 declinRequest.setEnabled(false);
@@ -274,7 +270,7 @@ public class UserProfile extends AppCompatActivity {
                             if (databaseError == null){
                                 sendRequest.setEnabled(true);
                                 currentState = "friends";
-                                sendRequest.setText("Unfriend");
+                                sendRequest.setText(R.string.unfriend);
 
                                 declinRequest.setVisibility(View.INVISIBLE);
                                 declinRequest.setEnabled(false);
@@ -301,7 +297,7 @@ public class UserProfile extends AppCompatActivity {
                             if (databaseError == null){
 
                                 currentState = "not_friends";
-                                sendRequest.setText("Send friend request");
+                                sendRequest.setText(R.string.send_request);
                             }else {
                                 String error = databaseError.getMessage();
                                 Toast.makeText(UserProfile.this, error, Toast.LENGTH_LONG).show();
@@ -332,7 +328,7 @@ public class UserProfile extends AppCompatActivity {
 
                             if (databaseError == null){
                                 currentState = "not_friends";
-                                sendRequest.setText("Send friend request");
+                                sendRequest.setText(R.string.send_request);
 
                                 declinRequest.setVisibility(View.INVISIBLE);
                                 declinRequest.setEnabled(false);

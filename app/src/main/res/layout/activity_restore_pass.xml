@@ -14,7 +14,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enter email to send your password"
+        android:text="@string/enter_email_to_send_your_password"
         android:textColor="#FFFF"
         android:textSize="16sp"
         android:layout_marginBottom="20dp"/>
@@ -34,7 +34,7 @@
             android:drawableLeft="@drawable/ic_person"
             android:drawablePadding="8dp"
             android:drawableStart="@drawable/ic_person"
-            android:hint="Email"
+            android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:textColor="#FFFF"
             android:textColorHint="#FFFF"
@@ -50,7 +50,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="40dp"
         android:background="@drawable/round_btn"
-        android:text="Restore"
+        android:text="@string/restore"
         android:textAllCaps="false"
         android:textColor="#E2001A"
         android:textSize="16sp"

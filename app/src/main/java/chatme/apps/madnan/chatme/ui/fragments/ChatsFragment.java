@@ -26,6 +26,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import chatme.apps.madnan.chatme.R;
 import chatme.apps.madnan.chatme.model.Convs;
 import chatme.apps.madnan.chatme.ui.ChatActivity;
@@ -38,7 +40,8 @@ import static chatme.apps.madnan.chatme.utils.Constants.USER_NAME;
 
 public class ChatsFragment extends Fragment {
 
-    private RecyclerView chatsRV;
+    @BindView(R.id.chatsRV)
+     RecyclerView chatsRV;
 
     private DatabaseReference mConvDatabase;
     private DatabaseReference mMessageDataase;
@@ -55,6 +58,8 @@ public class ChatsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chats, container, false);
 
+        ButterKnife.bind(this, view);
+
         mAuth = FirebaseAuth.getInstance();
         mCurrentUserId = mAuth.getCurrentUser().getUid();
 
@@ -65,7 +70,6 @@ public class ChatsFragment extends Fragment {
         mMessageDataase = FirebaseDatabase.getInstance().getReference().child("messages").child(mCurrentUserId);
         mMessageDataase.keepSynced(true);
 
-        chatsRV = (RecyclerView)view.findViewById(R.id.chatsRV);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
@@ -162,8 +166,13 @@ public class ChatsFragment extends Fragment {
 
     public static class ConvHolder extends RecyclerView.ViewHolder{
 
-        TextView username, userMessage;
+        @BindView(R.id.users_nameTV)
+        TextView username;
+        @BindView(R.id.users_statusTV)
+        TextView userMessage;
+        @BindView(R.id.users_profileIMG)
         CircleImageView userImage;
+        @BindView(R.id.onlineIV)
         ImageView onlineImage;
 
         View mView;
@@ -172,10 +181,7 @@ public class ChatsFragment extends Fragment {
             super(itemView);
             mView = itemView;
 
-            username = (TextView)mView.findViewById(R.id.users_nameTV);
-            userMessage = (TextView)mView.findViewById(R.id.users_statusTV);
-            userImage = (CircleImageView)mView.findViewById(R.id.users_profileIMG);
-            onlineImage = (ImageView)mView.findViewById(R.id.onlineIV);
+            ButterKnife.bind(this, mView);
         }
 
         public void setMessage(String message, boolean isSeen){

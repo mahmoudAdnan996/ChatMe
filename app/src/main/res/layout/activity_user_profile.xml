@@ -23,7 +23,7 @@
         android:layout_below="@+id/userProfileIMG"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="Display name"
+        android:text="@string/username"
         android:textColor="#FFFF"
         android:textSize="22sp" />
 
@@ -34,7 +34,7 @@
         android:layout_below="@+id/UserProfileName"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="Current user status"
+        android:text="@string/current_user_status"
         android:textColor="#FFFF" />
 
 
@@ -49,7 +49,7 @@
         android:background="@drawable/prof_btn"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:text="Send friend request"
+        android:text="@string/send_request"
         android:textColor="#FFFF" />
 
     <TextView
@@ -59,7 +59,7 @@
         android:layout_above="@+id/UserProfileSendRequest"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
-        android:text="Total Friends"
+        android:text="@string/total_friends"
         android:textColor="#FFFF" />
     <Button
         android:id="@+id/DeclineRequest"
@@ -71,6 +71,6 @@
         android:background="@drawable/prof_btn"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:text="Decline friend request"
+        android:text="@string/decline_friend_request"
         android:textColor="#FFFF" />
 </RelativeLayout>

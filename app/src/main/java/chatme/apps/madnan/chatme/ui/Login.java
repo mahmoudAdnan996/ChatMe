@@ -24,6 +24,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import chatme.apps.madnan.chatme.R;
 
 import static chatme.apps.madnan.chatme.utils.Constants.DEVICE_TOKEN;
@@ -31,11 +33,17 @@ import static chatme.apps.madnan.chatme.utils.Constants.USERS_TABLE;
 
 public class Login extends AppCompatActivity {
 
-    TextInputLayout userName, password;
+    @BindView(R.id.signIn_username)
+    TextInputLayout userName;
+    @BindView(R.id.signIn_password)
+    TextInputLayout password;
+    @BindView(R.id.signIn_button)
     Button signIn_btn;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+
     String mUsername, mPassword;
 
-    Toolbar mToolbar;
 
     MaterialDialog.Builder progressDialog;
     MaterialDialog dialog;
@@ -47,11 +55,12 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+        ButterKnife.bind(this);
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        mToolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle("Login");
+        mToolbar.setTitle(getString(R.string.Signin));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -60,10 +69,6 @@ public class Login extends AppCompatActivity {
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child(USERS_TABLE);
 
         progressDialog = new MaterialDialog.Builder(this);
-
-        userName = (TextInputLayout)findViewById(R.id.signIn_username);
-        password = (TextInputLayout)findViewById(R.id.signIn_password);
-        signIn_btn = (Button)findViewById(R.id.signIn_button);
 
         Animation an = AnimationUtils.loadAnimation(getBaseContext(),R.anim.appear);
         signIn_btn.startAnimation(an);
@@ -76,11 +81,11 @@ public class Login extends AppCompatActivity {
                 mPassword = password.getEditText().getText().toString().trim();
 
                 if (mUsername.isEmpty() || mPassword.isEmpty()){
-                    Toast.makeText(getBaseContext(), "Please fill all fields!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), R.string.fill_all_fields, Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    progressDialog.title("Signing In");
-                    progressDialog.content("Please wait...");
+                    progressDialog.title(R.string.signning_in);
+                    progressDialog.content(R.string.please_wait);
                     progressDialog.canceledOnTouchOutside(false);
                     progressDialog.progress(true, 0);
                     progressDialog.widgetColorRes(R.color.colorPrimary);
@@ -121,7 +126,7 @@ public class Login extends AppCompatActivity {
                         else {
                             dialog.dismiss();
                             Log.e("ERROR", String.valueOf(task.getException()));
-                            Toast.makeText(Login.this, "Can't sign in, something is wrong,please try again!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(Login.this, R.string.cant_sign_in, Toast.LENGTH_LONG).show();
                         }
                     }
                 });

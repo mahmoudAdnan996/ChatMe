@@ -38,6 +38,8 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:0.9.5.0'
     implementation 'com.firebaseui:firebase-ui-database:2.2.0'
     implementation 'com.squareup.okhttp:okhttp:2.5.0'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     testImplementation 'junit:junit:4.12'
 }
 
